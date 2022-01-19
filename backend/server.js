@@ -4,8 +4,7 @@ import mongoose from "mongoose";
 import crypto from "crypto";
 import bcrypt from "bcrypt";
 
-// mongodb://localhost/authAPI
-const mongoUrl = process.env.MONGO_URL || "mongodb://localhost/authAPI";
+const mongoUrl = process.env.MONGO_URL || "mongodb://localhost/final";
 mongoose.connect(mongoUrl, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -34,17 +33,39 @@ const UserSchema = new mongoose.Schema({
     default: () => crypto.randomBytes(128).toString("hex"),
   },
 });
-
 const User = mongoose.model("User", UserSchema);
 
-const ThoughtSchema = new mongoose.Schema({
-  message: {
+const GroupSchema = new mongoose.Schema({
+  title: {
     type: String,
     required: true,
   },
-});
+  description: {
+    type: String,
+  },
 
-const Thought = mongoose.model("Thought", ThoughtSchema);
+  //helpers: {
+  //some type of ID that connects to a user, required.
+  //}
+});
+const Group = mongoose.model("Group", GroupSchema);
+
+const TaskSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    required: true,
+  },
+  description: {
+    type: String,
+    required: true,
+  },
+  group: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Group",
+  },
+  //Possible to add helper or leave blank.
+});
+const Task = mongoose.model("Task", TaskSchema);
 
 // Defines the port the app will run on. Defaults to 8080, but can be
 // overridden when starting the server. For example:
@@ -79,18 +100,73 @@ const authenticateUser = async (req, res, next) => {
 // Authorization = what type of member - 403
 
 // Start defining your routes here
-app.get("/thoughts", authenticateUser);
-app.get("/thoughts", async (req, res) => {
-  const thoughts = await Thought.find({});
-  res.status(201).json({ response: thoughts, success: true });
+app.get("/", (req, res) => {
+  res.send("Start");
 });
 
-app.post("/thoughts", async (req, res) => {
-  const { message } = req.body;
+app.get("/home", authenticateUser);
+app.get("/home", async (req, res) => {
+  res.send("Home");
+  // const thoughts = await Thought.find({});
+  // res.status(201).json({ response: thoughts, success: true });
+});
+
+app.get("/home/tasks", authenticateUser);
+app.get("/home/tasks", async (req, res) => {
+  try {
+    const tasks = await Task.find({});
+    res.status(201).json({ response: tasks, success: true });
+  } catch (error) {
+    res.status(400).json({ response: error, success: false });
+  }
+});
+app.get("/home/tasks/:taskId", async (req, res) => {
+  const { taskId } = req.params;
+
+  const task = await Task.findById(taskId).populate("group");
+  res.status(200).json({ response: task, success: true });
+});
+
+app.get("/home/groups/:groupId", async (req, res) => {
+  const { groupId } = req.params;
+
+  const group = await Group.findById(groupId).populate("group");
+
+  res.status(200).json({ response: group, success: true });
+});
+
+app.get("/home/groups", authenticateUser);
+app.get("/home/groups", async (req, res) => {
+  try {
+    const groups = await Group.find({});
+    res.status(201).json({ response: groups, success: true });
+  } catch (error) {
+    res.status(400).json({ response: error, success: false });
+  }
+});
+
+app.post("/home/creategroup", async (req, res) => {
+  const { title, description } = req.body;
+  try {
+    const newGroup = await new Group({ title, description }).save();
+    res.status(201).json({ response: newGroup, success: true });
+  } catch (error) {
+    res.status(400).json({ response: error, success: false });
+  }
+});
+
+app.post("/home/task", async (req, res) => {
+  const { title, description, group } = req.body;
 
   try {
-    const newThought = await new Thought({ message }).save();
-    res.status(201).json({ response: newThought, success: true });
+    const queriedGroup = await Group.findById(group);
+
+    const newTask = await new Task({
+      title,
+      description,
+      group: queriedGroup,
+    }).save();
+    res.status(201).json({ response: newTask, success: true });
   } catch (error) {
     res.status(400).json({ response: error, success: false });
   }
