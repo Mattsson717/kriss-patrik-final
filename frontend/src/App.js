@@ -1,24 +1,34 @@
 import React from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+// import { Provider } from "react-redux";
+// import { configureStore, combineReducers } from "@reduxjs/toolkit";
 
-function App() {
+import Start from "./components/Start";
+import Login from "./components/Login";
+import Home from "./components/Home";
+import NotFound from "./components/NotFound";
+
+// import user from "./reducers/user";
+// import thoughts from "./reducers/thoughts";
+
+// const reducer = combineReducers({
+//   user: user.reducer,
+//   thoughts: thoughts.reducer,
+// });
+
+// const store = configureStore({ reducer });
+
+export const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-    
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    // <Provider store={store}>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Start />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </BrowserRouter>
+    // </Provider>
   );
-}
-
-export default App;
+};

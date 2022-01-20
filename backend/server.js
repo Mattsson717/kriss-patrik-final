@@ -13,6 +13,7 @@ mongoose.connect(mongoUrl, {
 });
 mongoose.Promise = Promise;
 
+// Model to Sign Up & Sign in user
 const UserSchema = new mongoose.Schema({
   username: {
     type: String,
@@ -35,6 +36,7 @@ const UserSchema = new mongoose.Schema({
 });
 const User = mongoose.model("User", UserSchema);
 
+// Model to create new group
 const GroupSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -43,13 +45,19 @@ const GroupSchema = new mongoose.Schema({
   description: {
     type: String,
   },
-
+  task: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Task",
+    },
+  ],
   //helpers: {
   //some type of ID that connects to a user, required.
   //}
 });
 const Group = mongoose.model("Group", GroupSchema);
 
+// Model to create task
 const TaskSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -59,10 +67,11 @@ const TaskSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  group: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Group",
-  },
+  // group: {
+  //   type: mongoose.Schema.Types.ObjectId,
+  //   ref: "Group",
+  // },
+  // Checked?
   //Possible to add helper or leave blank.
 });
 const Task = mongoose.model("Task", TaskSchema);
@@ -82,7 +91,7 @@ const authenticateUser = async (req, res, next) => {
   try {
     const user = await User.findOne({ accessToken });
     if (user) {
-      next();
+      next(); // built in function for express that makes the app move along if there's for example an user
     } else {
       res.status(401).json({
         response: {
@@ -99,7 +108,7 @@ const authenticateUser = async (req, res, next) => {
 // Authentication = member - 401
 // Authorization = what type of member - 403
 
-// Start defining your routes here
+// Get endpoints
 app.get("/", (req, res) => {
   res.send("Start");
 });
@@ -107,8 +116,6 @@ app.get("/", (req, res) => {
 app.get("/home", authenticateUser);
 app.get("/home", async (req, res) => {
   res.send("Home");
-  // const thoughts = await Thought.find({});
-  // res.status(201).json({ response: thoughts, success: true });
 });
 
 app.get("/home/tasks", authenticateUser);
@@ -130,21 +137,33 @@ app.get("/home/tasks/:taskId", async (req, res) => {
 app.get("/home/groups/:groupId", async (req, res) => {
   const { groupId } = req.params;
 
-  const group = await Group.findById(groupId).populate("group");
-
-  res.status(200).json({ response: group, success: true });
+  const group = await Group.findById(groupId).populate("task");
+  res.status(200).json({ response: group, task, success: true });
 });
 
 app.get("/home/groups", authenticateUser);
 app.get("/home/groups", async (req, res) => {
   try {
-    const groups = await Group.find({});
+    const groups = await Group.find({}).populate("task");
     res.status(201).json({ response: groups, success: true });
   } catch (error) {
     res.status(400).json({ response: error, success: false });
   }
 });
 
+// Försök hitta alla tasks med samma grupp id
+app.get("/home/tasks/:groupId", async (req, res) => {
+  const { groupId } = req.body;
+
+  try {
+    const tasks = await Task.findById(groupId);
+    res.status(201).json({ response: tasks, success: true });
+  } catch (error) {
+    res.status(400).json({ response: error, success: false });
+  }
+});
+
+// Post endpoints
 app.post("/home/creategroup", async (req, res) => {
   const { title, description } = req.body;
   try {
@@ -159,13 +178,16 @@ app.post("/home/task", async (req, res) => {
   const { title, description, group } = req.body;
 
   try {
-    const queriedGroup = await Group.findById(group);
-
     const newTask = await new Task({
       title,
       description,
-      group: queriedGroup,
     }).save();
+    await Group.findByIdAndUpdate(group, {
+      $push: {
+        task: newTask,
+      },
+    });
+
     res.status(201).json({ response: newTask, success: true });
   } catch (error) {
     res.status(400).json({ response: error, success: false });
@@ -225,6 +247,40 @@ app.post("/signin", async (req, res) => {
         response: "Username or password doesn't match",
         success: false,
       });
+    }
+  } catch (error) {
+    res.status(400).json({ response: error, success: false });
+  }
+});
+
+// Delete Task by Id
+app.delete("/home/tasks/:taskId", async (req, res) => {
+  const { taskId } = req.params;
+
+  try {
+    const deletedTask = await Task.findByIdAndDelete(taskId);
+    if (deletedTask) {
+      res.status(200).json(deletedTask);
+    } else {
+      res.status(404).json({ response: "Task not found", success: false });
+    }
+  } catch (error) {
+    res.status(400).json({ response: error, success: false });
+  }
+});
+
+// Patch Task
+app.patch("/home/tasks/:taskId", async (req, res) => {
+  const { taskId } = req.params;
+
+  try {
+    const updatedTask = await Task.findByIdAndUpdate(taskId, req.body, {
+      new: true,
+    });
+    if (updatedTask) {
+      res.json(updatedTask);
+    } else {
+      res.status(404).json({ response: "Thought not found", success: false });
     }
   } catch (error) {
     res.status(400).json({ response: error, success: false });
