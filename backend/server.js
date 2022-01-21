@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import crypto from "crypto";
 import bcrypt from "bcrypt";
 
+//setting up local database
 const mongoUrl = process.env.MONGO_URL || "mongodb://localhost/final";
 mongoose.connect(mongoUrl, {
   useNewUrlParser: true,
@@ -51,9 +52,6 @@ const GroupSchema = new mongoose.Schema({
       ref: "Task",
     },
   ],
-  //helpers: {
-  //some type of ID that connects to a user, required.
-  //}
 });
 const Group = mongoose.model("Group", GroupSchema);
 
@@ -67,17 +65,20 @@ const TaskSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  // group: {
-  //   type: mongoose.Schema.Types.ObjectId,
-  //   ref: "Group",
-  // },
+  group: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Group",
+  },
+
+  // Connect task to group?
+
   // Checked?
   //Possible to add helper or leave blank.
 });
 const Task = mongoose.model("Task", TaskSchema);
 
 // Defines the port the app will run on. Defaults to 8080, but can be
-// overridden when starting the server. For example:
+// overridden when starting the server.
 const port = process.env.PORT || 8080;
 const app = express();
 
@@ -85,6 +86,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+//Function for checking for AccessToken that we can use later in the code.
 const authenticateUser = async (req, res, next) => {
   const accessToken = req.header("Authorization");
 
@@ -105,9 +107,6 @@ const authenticateUser = async (req, res, next) => {
   }
 };
 
-// Authentication = member - 401
-// Authorization = what type of member - 403
-
 // Get endpoints
 app.get("/", (req, res) => {
   res.send("Start");
@@ -121,7 +120,7 @@ app.get("/home", async (req, res) => {
 app.get("/home/tasks", authenticateUser);
 app.get("/home/tasks", async (req, res) => {
   try {
-    const tasks = await Task.find({});
+    const tasks = await Task.find({}).populate("group");
     res.status(201).json({ response: tasks, success: true });
   } catch (error) {
     res.status(400).json({ response: error, success: false });
@@ -130,7 +129,7 @@ app.get("/home/tasks", async (req, res) => {
 app.get("/home/tasks/:taskId", async (req, res) => {
   const { taskId } = req.params;
 
-  const task = await Task.findById(taskId).populate("group");
+  const task = await Task.findById(taskId);
   res.status(200).json({ response: task, success: true });
 });
 
@@ -138,7 +137,7 @@ app.get("/home/groups/:groupId", async (req, res) => {
   const { groupId } = req.params;
 
   const group = await Group.findById(groupId).populate("task");
-  res.status(200).json({ response: group, task, success: true });
+  res.status(200).json({ response: group, success: true });
 });
 
 app.get("/home/groups", authenticateUser);
@@ -151,20 +150,8 @@ app.get("/home/groups", async (req, res) => {
   }
 });
 
-// Försök hitta alla tasks med samma grupp id
-app.get("/home/tasks/:groupId", async (req, res) => {
-  const { groupId } = req.body;
-
-  try {
-    const tasks = await Task.findById(groupId);
-    res.status(201).json({ response: tasks, success: true });
-  } catch (error) {
-    res.status(400).json({ response: error, success: false });
-  }
-});
-
 // Post endpoints
-app.post("/home/creategroup", async (req, res) => {
+app.post("/home/group", async (req, res) => {
   const { title, description } = req.body;
   try {
     const newGroup = await new Group({ title, description }).save();
@@ -269,7 +256,23 @@ app.delete("/home/tasks/:taskId", async (req, res) => {
   }
 });
 
-// Patch Task
+// Delete Group by Id
+app.delete("/home/groups/:groupId", async (req, res) => {
+  const { groupId } = req.params;
+
+  try {
+    const deletedGroup = await Group.findByIdAndDelete(groupId);
+    if (deletedGroup) {
+      res.status(200).json(deletedGroup);
+    } else {
+      res.status(404).json({ response: "Group not found", success: false });
+    }
+  } catch (error) {
+    res.status(400).json({ response: error, success: false });
+  }
+});
+
+// Patch Task by Id
 app.patch("/home/tasks/:taskId", async (req, res) => {
   const { taskId } = req.params;
 
@@ -281,6 +284,24 @@ app.patch("/home/tasks/:taskId", async (req, res) => {
       res.json(updatedTask);
     } else {
       res.status(404).json({ response: "Thought not found", success: false });
+    }
+  } catch (error) {
+    res.status(400).json({ response: error, success: false });
+  }
+});
+
+// Patch Group by Id
+app.patch("/home/group/:groupId", async (req, res) => {
+  const { groupId } = req.params;
+
+  try {
+    const updatedGroup = await Group.findByIdAndUpdate(groupId, req.body, {
+      new: true,
+    });
+    if (updatedGroup) {
+      res.json(updatedGroup);
+    } else {
+      res.status(404).json({ response: "Group not found", success: false });
     }
   } catch (error) {
     res.status(400).json({ response: error, success: false });
