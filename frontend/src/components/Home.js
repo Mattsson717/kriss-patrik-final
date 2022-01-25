@@ -26,9 +26,23 @@ const Home = () => {
   };
 
   return (
-    <button type="button" onClick={() => onButtonClick()}>
-      Log out
-    </button>
+    <section>
+      <button type="button" onClick={() => onButtonClick()}>
+        Log out
+      </button>
+
+      <button type="button" onClick={() => navigate("/tasks")}>
+        My tasks
+      </button>
+
+      <button type="button" onClick={() => navigate("/groups")}>
+        My groups
+      </button>
+
+      <button type="button" onClick={() => navigate("/group")}>
+        Create new group
+      </button>
+    </section>
   );
 };
 

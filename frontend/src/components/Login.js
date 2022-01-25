@@ -1,4 +1,18 @@
 import React, { useEffect, useState } from "react";
+import { FaSun, FaMoon } from "react-icons/fa";
+import {
+  Flex,
+  Heading,
+  Input,
+  Button,
+  useColorMode,
+  useColorModeValue,
+  IconButton,
+  Stack,
+  Box,
+  // FormControl,
+  FormLabel,
+} from "@chakra-ui/react";
 import { useSelector, useDispatch, batch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
@@ -11,6 +25,10 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [mode, setMode] = useState("signin");
   const [error, setError] = useState(false);
+
+  const { colorMode, toggleColorMode } = useColorMode();
+
+  const isDark = colorMode === "dark";
 
   const errorMess = useSelector((store) => store.user.error);
 
@@ -71,62 +89,98 @@ const Login = () => {
   };
 
   return (
-    <section>
-      <form onSubmit={onFormSubmit}>
-        <fieldset>
-          <legend>
-            <label htmlFor="username">Username</label>
-          </legend>
-          <input
-            id="username"
-            type="text"
-            value={username}
-            onChange={(event) => setUsername(event.target.value)}
-          />
-        </fieldset>
-        <fieldset>
-          <legend>
-            <label htmlFor="password">Password</label>
-          </legend>
-          <input
-            id="password"
-            type="password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-          />
-        </fieldset>
-
-        {mode === "signup" && (
-          <>
-            <fieldset>
-              <legend>
-                <label htmlFor="email">Email</label>
-              </legend>
-              <input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
+    <Flex
+      height="vh100"
+      alignItems="center"
+      justifyContent="center"
+      // bg={useColorModeValue("gray.50", "gray.800")}
+    >
+      <IconButton
+        icon={isDark ? <FaSun /> : <FaMoon />}
+        isRound="true"
+        onClick={toggleColorMode}
+      />
+      <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
+        <Stack align={"center"}>
+          <Heading fontSize={"4x1"}>Log in</Heading>
+        </Stack>
+        <Box
+          rounded={"lg"}
+          bg={useColorModeValue("white", "gray.700")}
+          boxShadow={"lg"}
+          p={8}
+        >
+          <Stack spacing={4}>
+            <form onSubmit={onFormSubmit}>
+              <FormLabel htmlFor="username">Username</FormLabel>
+              <Input
+                placeholder="username"
+                variant="filled"
+                mb={3}
+                type="text"
+                id="username"
+                value={username}
+                onChange={(event) => setUsername(event.target.value)}
               />
-            </fieldset>
-          </>
-        )}
 
-        <button type="submit">Submit</button>
-        {error && <p>{errorMess}</p>}
+              <FormLabel htmlFor="password">Password</FormLabel>
+              <Input
+                placeholder="*******"
+                variant="filled"
+                mb={6}
+                id="password"
+                type="password"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+              />
 
-        {mode === "signin" && (
-          <button type="button" onClick={() => setMode("signup")}>
-            Create new account
-          </button>
-        )}
-        {mode === "signup" && (
-          <button type="button" onClick={() => setMode("signin")}>
-            Go to log in
-          </button>
-        )}
-      </form>
-    </section>
+              {mode === "signup" && (
+                <>
+                  <FormLabel htmlFor="email">Email</FormLabel>
+
+                  <Input
+                    placeholder="yourMail@mail.com"
+                    variant="filled"
+                    mb={3}
+                    id="email"
+                    type="email"
+                    value={email}
+                    onChange={(event) => setEmail(event.target.value)}
+                  />
+                </>
+              )}
+              <Flex alignItems="center" justifyContent="center">
+                <Button colorScheme="teal" m={2} type="submit">
+                  Submit
+                </Button>
+
+                {mode === "signin" && (
+                  <Button
+                    colorScheme="teal"
+                    type="button"
+                    m={2}
+                    onClick={() => setMode("signup")}
+                  >
+                    Sign up
+                  </Button>
+                )}
+                {mode === "signup" && (
+                  <Button
+                    colorScheme="teal"
+                    type="button"
+                    m={2}
+                    onClick={() => setMode("signin")}
+                  >
+                    Login
+                  </Button>
+                )}
+              </Flex>
+            </form>
+            {error && <p>{errorMess}</p>}
+          </Stack>
+        </Box>
+      </Stack>
+    </Flex>
   );
 };
 
