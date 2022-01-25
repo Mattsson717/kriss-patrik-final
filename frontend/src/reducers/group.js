@@ -7,6 +7,7 @@ export const group = createSlice({
     items: [],
     title: {},
     description: {},
+    task: [],
     error: null,
   },
   reducers: {
@@ -21,6 +22,9 @@ export const group = createSlice({
     },
     setNewGroup: (store, action) => {
       store.items = [action.payload, ...store.items];
+    },
+    setTask: (store, action) => {
+      store.items = action.payload;
     },
     setError: (store, action) => {
       store.error = action.payload;

@@ -30,6 +30,12 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  group: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "group",
+    },
+  ],
   accessToken: {
     type: String,
     default: () => crypto.randomBytes(128).toString("hex"),
@@ -117,6 +123,7 @@ app.get("/home", async (req, res) => {
   res.send("Home");
 });
 
+// Get all tasks
 app.get("/home/tasks", authenticateUser);
 app.get("/home/tasks", async (req, res) => {
   try {
@@ -140,6 +147,23 @@ app.get("/home/groups/:groupId", async (req, res) => {
   res.status(200).json({ response: group, success: true });
 });
 
+// Get user groups by user id
+app.get("/home/:userId/groups", async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const queriedUser = await User.findById(userId).populate("group");
+    if (queriedUser) {
+      res.status(200).json({ response: queriedUser.group, success: true });
+    } else {
+      res.status(404).json({ response: "User not found", success: false });
+    }
+  } catch (error) {
+    res.status(400).json({ response: error, success: false });
+  }
+});
+
+// Get ALL groups Behöver vi denna?
 app.get("/home/groups", authenticateUser);
 app.get("/home/groups", async (req, res) => {
   try {
@@ -302,6 +326,39 @@ app.patch("/home/group/:groupId", async (req, res) => {
       res.json(updatedGroup);
     } else {
       res.status(404).json({ response: "Group not found", success: false });
+    }
+  } catch (error) {
+    res.status(400).json({ response: error, success: false });
+  }
+});
+
+// Attach GROUPS to user
+app.patch("/home/:userId/group/:groupId", async (req, res) => {
+  const { userId, groupId } = req.params;
+
+  try {
+    const queriedUser = await User.findById(userId);
+
+    if (queriedUser) {
+      const queriedGroup = await Group.findById(groupId);
+
+      if (queriedProduct) {
+        const updatedUser = await User.findByIdAndUpdate(
+          userId,
+          {
+            $push: {
+              group: queriedGroup,
+            },
+          },
+          { new: true }
+        );
+
+        res.status(200).json({ response: updatedUser, success: true });
+      } else {
+        res.status(404).json({ response: "Group not found", success: false });
+      }
+    } else {
+      res.status(404).json({ response: "User not found", success: false });
     }
   } catch (error) {
     res.status(400).json({ response: error, success: false });
