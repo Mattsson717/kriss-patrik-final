@@ -5,6 +5,8 @@ export const task = createSlice({
   initialState: {
     items: [],
     error: null,
+    isComplete: false,
+    createdAt: new Date(),
   },
   reducers: {
     setItems: (store, action) => {
@@ -16,5 +18,20 @@ export const task = createSlice({
     setError: (store, action) => {
       store.error = action.payload;
     },
+  },
+  // check task as taken
+  toggleTask: (store, action) => {
+    const updatedItems = store.items.map((item) => {
+      if (item._id === action.payload) {
+        const updatedTask = {
+          ...item,
+          isTaken: !item.isTaken,
+        };
+        return updatedTask;
+      } else {
+        return item;
+      }
+    });
+    store.items = updatedItems;
   },
 });

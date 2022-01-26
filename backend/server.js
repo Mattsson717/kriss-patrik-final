@@ -30,12 +30,12 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  group: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "group",
-    },
-  ],
+  // group: [
+  //   {
+  //     type: mongoose.Schema.Types.ObjectId,
+  //     ref: "group",
+  //   },
+  // ],
   accessToken: {
     type: String,
     default: () => crypto.randomBytes(128).toString("hex"),
@@ -58,6 +58,12 @@ const GroupSchema = new mongoose.Schema({
       ref: "Task",
     },
   ],
+  user: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
 });
 const Group = mongoose.model("Group", GroupSchema);
 
@@ -75,11 +81,23 @@ const TaskSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Group",
   },
+  taken: {
+    type: Boolean,
+    default: false,
+  },
+  user: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
 
-  // Connect task to group?
+  //taken by: default none, later user id  (Possible to add helper or leave blank)
 
-  // Checked?
-  //Possible to add helper or leave blank.
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 const Task = mongoose.model("Task", TaskSchema);
 
@@ -123,16 +141,19 @@ app.get("/home", async (req, res) => {
   res.send("Home");
 });
 
-// Get all tasks
+// Get all tasks by USER
 app.get("/home/tasks", authenticateUser);
-app.get("/home/tasks", async (req, res) => {
+app.get("/home/tasks/:userId", async (req, res) => {
+  const { userId } = req.params;
+
   try {
-    const tasks = await Task.find({}).populate("group");
+    const tasks = await Task.findById(userId).populate("user");
     res.status(201).json({ response: tasks, success: true });
   } catch (error) {
     res.status(400).json({ response: error, success: false });
   }
 });
+
 app.get("/home/tasks/:taskId", async (req, res) => {
   const { taskId } = req.params;
 
@@ -167,7 +188,7 @@ app.get("/home/:userId/groups", async (req, res) => {
 app.get("/home/groups", authenticateUser);
 app.get("/home/groups", async (req, res) => {
   try {
-    const groups = await Group.find({}).populate("task");
+    const groups = await Group.find({}).populate("task").populate("user");
     res.status(201).json({ response: groups, success: true });
   } catch (error) {
     res.status(400).json({ response: error, success: false });
@@ -332,33 +353,66 @@ app.patch("/home/group/:groupId", async (req, res) => {
   }
 });
 
-// Attach GROUPS to user
-app.patch("/home/:userId/group/:groupId", async (req, res) => {
+// Attach USER to groups
+app.patch("/home/:userId/groups/:groupId", async (req, res) => {
   const { userId, groupId } = req.params;
 
   try {
-    const queriedUser = await User.findById(userId);
+    const queriedGroup = await Group.findById(groupId);
 
-    if (queriedUser) {
-      const queriedGroup = await Group.findById(groupId);
+    if (queriedGroup) {
+      const queriedUser = await User.findById(userId);
 
-      if (queriedProduct) {
-        const updatedUser = await User.findByIdAndUpdate(
-          userId,
+      if (queriedUser) {
+        const updatedGroup = await Group.findByIdAndUpdate(
+          groupId,
           {
             $push: {
-              group: queriedGroup,
+              user: queriedUser,
             },
           },
           { new: true }
         );
 
-        res.status(200).json({ response: updatedUser, success: true });
+        res.status(200).json({ response: updatedGroup, success: true });
       } else {
-        res.status(404).json({ response: "Group not found", success: false });
+        res.status(404).json({ response: "User not found", success: false });
       }
     } else {
-      res.status(404).json({ response: "User not found", success: false });
+      res.status(404).json({ response: "Group not found", success: false });
+    }
+  } catch (error) {
+    res.status(400).json({ response: error, success: false });
+  }
+});
+
+// Attach USER to tasks
+app.patch("/home/:userId/tasks/:taskId", async (req, res) => {
+  const { userId, taskId } = req.params;
+
+  try {
+    const queriedTask = await Task.findById(taskId);
+
+    if (queriedTask) {
+      const queriedUser = await User.findById(userId);
+
+      if (queriedUser) {
+        const updatedTask = await Task.findByIdAndUpdate(
+          taskId,
+          {
+            $push: {
+              user: queriedUser,
+            },
+          },
+          { new: true }
+        );
+
+        res.status(200).json({ response: updatedTask, success: true });
+      } else {
+        res.status(404).json({ response: "User not found", success: false });
+      }
+    } else {
+      res.status(404).json({ response: "Task not found", success: false });
     }
   } catch (error) {
     res.status(400).json({ response: error, success: false });
