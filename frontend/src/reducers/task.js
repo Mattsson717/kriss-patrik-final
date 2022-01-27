@@ -5,8 +5,8 @@ export const task = createSlice({
   initialState: {
     items: [],
     error: null,
-    isComplete: false,
-    createdAt: new Date(),
+    isTaken: false,
+    // createdAt: new Date(),
   },
   reducers: {
     setItems: (store, action) => {

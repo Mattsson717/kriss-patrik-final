@@ -14,6 +14,7 @@ mongoose.connect(mongoUrl, {
 });
 mongoose.Promise = Promise;
 
+// ******** Schemas ******** //
 // Model to Sign Up & Sign in user
 const UserSchema = new mongoose.Schema({
   username: {
@@ -52,12 +53,12 @@ const GroupSchema = new mongoose.Schema({
   description: {
     type: String,
   },
-  task: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Task",
-    },
-  ],
+  // task: [
+  //   {
+  //     type: mongoose.Schema.Types.ObjectId,
+  //     ref: "Task",
+  //   },
+  // ],
   user: [
     {
       type: mongoose.Schema.Types.ObjectId,
@@ -85,12 +86,10 @@ const TaskSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  user: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-    },
-  ],
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  },
 
   //taken by: default none, later user id  (Possible to add helper or leave blank)
 
@@ -101,16 +100,15 @@ const TaskSchema = new mongoose.Schema({
 });
 const Task = mongoose.model("Task", TaskSchema);
 
-// Defines the port the app will run on. Defaults to 8080, but can be
-// overridden when starting the server.
+// ******** Defined Port ******** //
 const port = process.env.PORT || 8080;
 const app = express();
 
-// Add middlewares to enable cors and json body parsing
+// ******** Middlewear ******** //
 app.use(cors());
 app.use(express.json());
 
-//Function for checking for AccessToken that we can use later in the code.
+// ******** Authentication function ******** //.
 const authenticateUser = async (req, res, next) => {
   const accessToken = req.header("Authorization");
 
@@ -131,7 +129,8 @@ const authenticateUser = async (req, res, next) => {
   }
 };
 
-// Get endpoints
+// ******** ENDPOINTS ******** //
+// GET endpoints
 app.get("/", (req, res) => {
   res.send("Start");
 });
@@ -141,41 +140,29 @@ app.get("/home", async (req, res) => {
   res.send("Home");
 });
 
-// Get all tasks by USER
-app.get("/home/tasks", authenticateUser);
-app.get("/home/tasks/:userId", async (req, res) => {
+// Get all tasks by USER works in frontend but not Postman
+app.get("/tasks/:userId", authenticateUser);
+app.get("/tasks/:userId", async (req, res) => {
   const { userId } = req.params;
 
   try {
-    const tasks = await Task.findById(userId).populate("user");
+    const tasks = await Task.find({ user: userId }).populate("user");
     res.status(201).json({ response: tasks, success: true });
   } catch (error) {
     res.status(400).json({ response: error, success: false });
   }
 });
 
-app.get("/home/tasks/:taskId", async (req, res) => {
-  const { taskId } = req.params;
-
-  const task = await Task.findById(taskId);
-  res.status(200).json({ response: task, success: true });
-});
-
-app.get("/home/groups/:groupId", async (req, res) => {
-  const { groupId } = req.params;
-
-  const group = await Group.findById(groupId).populate("task");
-  res.status(200).json({ response: group, success: true });
-});
-
-// Get user groups by user id
-app.get("/home/:userId/groups", async (req, res) => {
+// GET GROUPS by USERiD. SUCCESS but doesnt show any groups in postman.
+app.get("/groups/:userId", async (req, res) => {
   const { userId } = req.params;
 
   try {
-    const queriedUser = await User.findById(userId).populate("group");
-    if (queriedUser) {
-      res.status(200).json({ response: queriedUser.group, success: true });
+    const queriedGroup = await Group.find({ user: { $in: [userId] } }).populate(
+      "group"
+    );
+    if (queriedGroup) {
+      res.status(200).json({ response: queriedGroup, success: true });
     } else {
       res.status(404).json({ response: "User not found", success: false });
     }
@@ -184,19 +171,33 @@ app.get("/home/:userId/groups", async (req, res) => {
   }
 });
 
-// Get ALL groups Behöver vi denna?
-app.get("/home/groups", authenticateUser);
-app.get("/home/groups", async (req, res) => {
+// GET GROUPS by GROUP ID
+app.get("/groups/:groupId", async (req, res) => {
+  const { groupId } = req.params;
+
   try {
-    const groups = await Group.find({}).populate("task").populate("user");
-    res.status(201).json({ response: groups, success: true });
+    const group = await Group.findById(groupId);
+    res.status(200).json({ response: group, success: true });
   } catch (error) {
     res.status(400).json({ response: error, success: false });
   }
 });
 
-// Post endpoints
-app.post("/home/group", async (req, res) => {
+// GET TASKS by GROUP ID
+app.get("/tasks/:groupId", async (req, res) => {
+  const { groupId } = req.params;
+
+  try {
+    const tasks = await Task.findById(groupId);
+    res.status(200).json({ response: tasks, success: true });
+  } catch (error) {
+    res.status(400).json({ response: error, success: false });
+  }
+});
+
+// POST endpoints
+// Create new GROUP
+app.post("/group", async (req, res) => {
   const { title, description } = req.body;
   try {
     const newGroup = await new Group({ title, description }).save();
@@ -206,7 +207,8 @@ app.post("/home/group", async (req, res) => {
   }
 });
 
-app.post("/home/task", async (req, res) => {
+// Create new TASK and push it into the GROUP
+app.post("/task", async (req, res) => {
   const { title, description, group } = req.body;
 
   try {
@@ -226,7 +228,7 @@ app.post("/home/task", async (req, res) => {
   }
 });
 
-// Signup endpoint
+// SIGNUP endpoint
 app.post("/signup", async (req, res) => {
   const { username, password, email } = req.body;
 
@@ -257,7 +259,7 @@ app.post("/signup", async (req, res) => {
   }
 });
 
-// Signin endpoint
+// SIGNIN endpoint
 app.post("/signin", async (req, res) => {
   const { username, password } = req.body;
 
@@ -286,7 +288,7 @@ app.post("/signin", async (req, res) => {
 });
 
 // Delete Task by Id
-app.delete("/home/tasks/:taskId", async (req, res) => {
+app.delete("/tasks/:taskId", async (req, res) => {
   const { taskId } = req.params;
 
   try {
@@ -302,7 +304,7 @@ app.delete("/home/tasks/:taskId", async (req, res) => {
 });
 
 // Delete Group by Id
-app.delete("/home/groups/:groupId", async (req, res) => {
+app.delete("/groups/:groupId", async (req, res) => {
   const { groupId } = req.params;
 
   try {
@@ -318,7 +320,7 @@ app.delete("/home/groups/:groupId", async (req, res) => {
 });
 
 // Patch Task by Id
-app.patch("/home/tasks/:taskId", async (req, res) => {
+app.patch("/tasks/:taskId", async (req, res) => {
   const { taskId } = req.params;
 
   try {
@@ -336,7 +338,7 @@ app.patch("/home/tasks/:taskId", async (req, res) => {
 });
 
 // Patch Group by Id
-app.patch("/home/group/:groupId", async (req, res) => {
+app.patch("/group/:groupId", async (req, res) => {
   const { groupId } = req.params;
 
   try {
@@ -353,8 +355,8 @@ app.patch("/home/group/:groupId", async (req, res) => {
   }
 });
 
-// Attach USER to groups
-app.patch("/home/:userId/groups/:groupId", async (req, res) => {
+// Attach USER to GROUPS
+app.patch("/:userId/groups/:groupId", async (req, res) => {
   const { userId, groupId } = req.params;
 
   try {
@@ -386,8 +388,8 @@ app.patch("/home/:userId/groups/:groupId", async (req, res) => {
   }
 });
 
-// Attach USER to tasks
-app.patch("/home/:userId/tasks/:taskId", async (req, res) => {
+// Attach USER to TASKS
+app.patch("/:userId/tasks/:taskId", async (req, res) => {
   const { userId, taskId } = req.params;
 
   try {

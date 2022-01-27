@@ -7,6 +7,7 @@ import { Input } from "@chakra-ui/react";
 const MyTasks = () => {
   const dispatch = useDispatch();
   const taskItems = useSelector((store) => store.task.items);
+  const userId = useSelector((store) => store.user.userId);
   const accessToken = useSelector((store) => store.user.accessToken);
 
   const onToggleTask = (_id) => {
@@ -20,7 +21,7 @@ const MyTasks = () => {
         Authorization: accessToken,
       },
     };
-    fetch(API_URL("home/tasks"), options)
+    fetch(API_URL(`tasks/${userId}`), options)
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
@@ -31,7 +32,7 @@ const MyTasks = () => {
           dispatch(task.actions.setError(data.response));
         }
       });
-  }, [dispatch, accessToken, taskItems]);
+  }, [dispatch, accessToken, userId]);
 
   return (
     <div>
@@ -49,6 +50,7 @@ const MyTasks = () => {
 
             <li> {item.title} </li>
             <li> {item.description} </li>
+            <li> {item.group} </li>
           </ul>
         </div>
       ))}
