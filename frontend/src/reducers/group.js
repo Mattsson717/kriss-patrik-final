@@ -1,15 +1,24 @@
 import { createSlice } from "@reduxjs/toolkit";
 // import { API_URL } from "../utils/constants";
 
+const initialState = localStorage.getItem("group")
+  ? {
+      groupId: JSON.parse(localStorage.getItem("group")).groupId,
+    }
+  : {
+      groupId: null,
+      error: null,
+    };
+
 export const group = createSlice({
   name: "group",
-  initialState: {
-    items: [],
-    error: null,
-  },
+  initialState,
   reducers: {
     setItems: (store, action) => {
       store.items = action.payload;
+    },
+    setGroupId: (store, action) => {
+      store.groupId = action.payload;
     },
     setTitle: (store, action) => {
       store.items = action.payload;

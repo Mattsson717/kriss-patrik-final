@@ -2,6 +2,8 @@ import React, { useEffect } from "react";
 import { useSelector, useDispatch, batch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
+import { Flex, Button } from "@chakra-ui/react";
+
 import user from "../reducers/user";
 
 const Home = () => {
@@ -26,23 +28,23 @@ const Home = () => {
   };
 
   return (
-    <section>
-      <button type="button" onClick={() => onButtonClick()}>
+    <Flex m={3}>
+      <Button m={3} type="button" onClick={() => onButtonClick()}>
         Log out
-      </button>
+      </Button>
 
-      <button type="button" onClick={() => navigate("/tasks")}>
+      <Button m={3} type="button" onClick={() => navigate("/tasks")}>
         My tasks
-      </button>
+      </Button>
 
-      <button type="button" onClick={() => navigate("/groups")}>
+      <Button m={3} type="button" onClick={() => navigate("/groups")}>
         My groups
-      </button>
+      </Button>
 
-      <button type="button" onClick={() => navigate("/group")}>
+      <Button m={3} type="button" onClick={() => navigate("/createGroup")}>
         Create new group
-      </button>
-    </section>
+      </Button>
+    </Flex>
   );
 };
 

@@ -11,6 +11,7 @@ import NotFound from "./components/NotFound";
 import CreateGroup from "./components/pages/CreateGroup";
 import MyGroups from "./components/pages/MyGroups";
 import MyTasks from "./components/pages/MyTasks";
+import Group from "./components/pages/Group";
 
 import user from "./reducers/user";
 import { group } from "./reducers/group";
@@ -36,7 +37,8 @@ export const App = () => {
             <Route path="/home" element={<Home />} />
             <Route path="/tasks" element={<MyTasks />} />
             <Route path="/groups" element={<MyGroups />} />
-            <Route path="/group" element={<CreateGroup />} />
+            <Route path="/group" element={<Group />} />
+            <Route path="/createGroup" element={<CreateGroup />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

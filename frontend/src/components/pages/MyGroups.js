@@ -2,16 +2,16 @@ import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { API_URL } from "../../utils/constants";
 import { Flex, Box } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
 
 import { group } from "../../reducers/group";
 
 const MyGroups = () => {
   // const [items, setItems] = useState("");
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const groupItems = useSelector((store) => store.group.items);
-  const taskItems = useSelector((store) => store.task.items);
   const userId = useSelector((store) => store.user.userId);
-  const groupId = useSelector((store) => store.task.groupId);
   const accessToken = useSelector((store) => store.user.accessToken);
 
   useEffect(() => {
@@ -35,43 +35,21 @@ const MyGroups = () => {
         }
       });
   }, [dispatch, accessToken, userId]);
+  const onButtonClick = () => {
+    dispatch(group.actions.setGroupId());
+    navigate("/group");
 
-  //fetch tasks by groupId
-  useEffect(() => {
-    const options = {
-      method: "GET",
-      headers: {
-        Authorization: accessToken,
-      },
-    };
-
-    fetch(API_URL(`tasks/${groupId}`), options)
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success) {
-          dispatch(group.actions.setItems(data.response));
-          dispatch(group.actions.setError(null));
-        } else {
-          dispatch(group.actions.setItems([]));
-          dispatch(group.actions.setError(data.response));
-        }
-      });
-  }, [dispatch, accessToken, groupId]);
+    localStorage.addItem("group");
+  };
 
   return (
     <Flex height="vh100" alignItems="center" justifyContent="center">
       {groupItems.map((item) => (
         <Box key={item._id}>
-          <p>{item.title}</p>
+          <button onClick={() => onButtonClick()}>{item.title}</button>
           <p>{item.description}</p>
           {/* <p>{item.task}</p> */}
-        </Box>
-      ))}
-      {taskItems.map((item) => (
-        <Box key={item._id}>
-          <p>{item.title}</p>
-          <p>{item.description}</p>
-          {/* <p>{item.task}</p> */}
+          {/* onclick, POST groupId to local storage */}
         </Box>
       ))}
     </Flex>

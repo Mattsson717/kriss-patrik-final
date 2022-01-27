@@ -102,7 +102,7 @@ const Login = () => {
       />
       <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
         <Stack align={"center"}>
-          <Heading fontSize={"4x1"}>Log in</Heading>
+          <Heading fontSize={"4x1"}>GIVERS GAME</Heading>
         </Stack>
         <Box
           rounded={"lg"}
