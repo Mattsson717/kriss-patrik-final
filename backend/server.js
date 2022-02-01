@@ -47,6 +47,7 @@ const User = mongoose.model("User", UserSchema);
 const GroupSchema = new mongoose.Schema({
   title: {
     type: String,
+    unique: true,
     required: true,
   },
   description: {
@@ -71,6 +72,7 @@ const Group = mongoose.model("Group", GroupSchema);
 const TaskSchema = new mongoose.Schema({
   title: {
     type: String,
+    unique: true,
     required: true,
   },
   description: {
@@ -183,16 +185,14 @@ app.get("/groups/:groupId", async (req, res) => {
   }
 });
 
-// GET TASKS by GROUP ID --- Succes but RESPONSE is []
-app.get("/tasks/:groupId", async (req, res) => {
+// GET TASKS by GROUP ID --- WORKS!
+app.get("/tasks/group/:groupId", async (req, res) => {
   const { groupId } = req.params;
 
   try {
-    const queriedGroup = await Task.find({
-      group: { $in: [groupId] },
-    });
+    const queriedGroup = await Group.findById(groupId).populate("task");
     if (queriedGroup) {
-      res.status(200).json({ response: queriedGroup, success: true });
+      res.status(200).json({ response: queriedGroup.task, success: true });
     } else {
       res.status(404).json({ response: "User not found", success: false });
     }
@@ -201,25 +201,20 @@ app.get("/tasks/:groupId", async (req, res) => {
   }
 });
 
-// GET TASKS by GROUP ID --- Succes but RESPONSE is []
-// app.get("/tasks/:groupId", async (req, res) => {
-//   const { groupId } = req.params;
-
-//   try {
-//     const tasks = await Task.findById(groupId);
-//     res.status(200).json({ response: tasks, success: true });
-//   } catch (error) {
-//     res.status(400).json({ response: error, success: false });
-//   }
-// });
-
 // POST endpoints
 // Create new GROUP --- WORKS!
 app.post("/group", async (req, res) => {
   const { title, description } = req.body;
   try {
     const newGroup = await new Group({ title, description }).save();
-    res.status(201).json({ response: newGroup, success: true });
+    res.status(201).json({
+      response: {
+        groupId: newGroup._id,
+        title: newGroup.title,
+        description: newGroup.description,
+      },
+      success: true,
+    });
   } catch (error) {
     res.status(400).json({ response: error, success: false });
   }
@@ -357,6 +352,23 @@ app.patch("/tasks/:taskId", async (req, res) => {
   }
 });
 
+// Is TAKEN
+app.patch("/tasks/:taskId/taken", async (req, res) => {
+  const { taskId } = req.params;
+  const { taken } = req.body;
+
+  try {
+    const updatedTaken = await Task.findOneAndUpdate(
+      { _id: taskId },
+      { taken },
+      { new: true }
+    );
+    res.status(200).json({ response: updatedTaken, success: true });
+  } catch (error) {
+    res.status(400).json({ response: error, success: false });
+  }
+});
+
 // Patch Group by Id --- WORKS!
 app.patch("/group/:groupId", async (req, res) => {
   const { groupId } = req.params;
@@ -376,7 +388,7 @@ app.patch("/group/:groupId", async (req, res) => {
 });
 
 // Insert task in group --- WORKS!
-app.patch("/:taskId/groups/:groupId", async (req, res) => {
+app.patch("/tasks/:taskId/groups/:groupId", async (req, res) => {
   const { groupId, taskId } = req.params;
 
   try {
@@ -408,16 +420,18 @@ app.patch("/:taskId/groups/:groupId", async (req, res) => {
   }
 });
 
-// Attach USER to GROUPS --- USER Not found
-app.patch("/:userId/groups/:groupId", async (req, res) => {
+// Attach USER to GROUPS --- WORKS!
+app.patch("/user/:userId/groups/:groupId", async (req, res) => {
   const { userId, groupId } = req.params;
-  console.log("User", groupId);
+
   try {
     const queriedGroup = await Group.findById(groupId);
 
     if (queriedGroup) {
       const queriedUser = await User.findById(userId);
-
+      console.log("QueriedGroup", queriedGroup);
+      console.log("QueriedUser", queriedUser);
+      console.log("UserId, GroupId", userId, groupId);
       if (queriedUser) {
         const updatedGroup = await Group.findByIdAndUpdate(
           groupId,
@@ -442,7 +456,7 @@ app.patch("/:userId/groups/:groupId", async (req, res) => {
 });
 
 // Attach USER to TASKS --- WORKS!
-app.patch("/:userId/tasks/:taskId", async (req, res) => {
+app.patch("/user/:userId/tasks/:taskId", async (req, res) => {
   const { userId, taskId } = req.params;
 
   try {

@@ -1,18 +1,22 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { API_URL } from "../../utils/constants";
-import { task } from "../../reducers/task";
-import { Input, Flex, Box, useColorModeValue } from "@chakra-ui/react";
+import { task, onToggleTask } from "../../reducers/task";
+import {
+  Flex,
+  Box,
+  useColorModeValue,
+  Text,
+  Stack,
+  Checkbox,
+} from "@chakra-ui/react";
 
 const MyTasks = () => {
   const dispatch = useDispatch();
   const taskItems = useSelector((store) => store.task.items);
   const userId = useSelector((store) => store.user.userId);
   const accessToken = useSelector((store) => store.user.accessToken);
-
-  const onToggleTask = (_id) => {
-    dispatch(task.actions.toggleTask(_id));
-  };
+  const loggedInUser = useSelector((store) => store.user.username);
 
   useEffect(() => {
     const options = {
@@ -35,22 +39,49 @@ const MyTasks = () => {
   }, [dispatch, accessToken, userId]);
 
   return (
-    <Flex m={3}>
+    <Flex
+      as="section"
+      d="flex"
+      justifyContent="center"
+      alignItems="start"
+      h="100vh"
+      m={5}
+    >
       <Box
         rounded={"lg"}
         bg={useColorModeValue("white", "gray.700")}
         boxShadow={"lg"}
         p={8}
+        w={350}
       >
+        <Text>{loggedInUser}s Tasks:</Text>
         {taskItems.map((item) => (
           <Flex key={item._id}>
-            <Box
-              borderColor={"black"}
-              border={5}
-              borderBottomStyle={"solid"}
-              m={4}
-            >
-              {item.title}
+            <Box m={2} w={"80%"} p={2} rounded={"lg"} bg={"teal"}>
+              <span>{item.description}</span>
+              <Stack spacing={5} direction="row">
+                <Checkbox
+                  colorScheme="teal"
+                  name={item._id}
+                  variant="filled"
+                  mb={3}
+                  type="checkbox"
+                  value={item._id}
+                  onChange={() => dispatch(onToggleTask(item._id, item.taken))}
+                />
+              </Stack>
+              {/* <input
+                name={item._id}
+                variant="filled"
+                mb={3}
+                type="checkbox"
+                value={item._id}
+                onChange={() => dispatch(onToggleTask(item._id, item.taken))}
+              /> */}
+
+              {/* <li> {item.group} </li> */}
+
+              {item.taken}
             </Box>
           </Flex>
         ))}
@@ -60,20 +91,3 @@ const MyTasks = () => {
 };
 
 export default MyTasks;
-
-{
-  /* <ul>
-              <input
-                name={item._id}
-                variant="filled"
-                mb={3}
-                type="checkbox"
-                value={item._id}
-                onChange={() => onToggleTask(item._id)}
-              />
-
-              <li> {item.title} </li>
-              <li> {item.description} </li>
-              {/* <li> {item.group} </li> */
-}
-// </ul>

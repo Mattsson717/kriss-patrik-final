@@ -17,16 +17,19 @@ import {
   Input,
   FormLabel,
   Box,
+  useToast,
 } from "@chakra-ui/react";
 
 const CreateGroup = ({ isOpen, onClose }) => {
   const [title, setTitle] = useState("");
+  // const [task, setTask] = useState("");
   const [description, setDescription] = useState("");
   const [error, setError] = useState(false);
 
   // const groupItems = useSelector((store) => store.group.items);
   // const accessToken = useSelector((store) => store.user.accessToken);
   const dispatch = useDispatch();
+  const toast = useToast();
   // const navigate = useNavigate();
   const errorMess = useSelector((store) => store.user.error);
 
@@ -46,6 +49,13 @@ const CreateGroup = ({ isOpen, onClose }) => {
         if (data.success) {
           batch(() => {
             dispatch(group.actions.setNewGroup(data.response));
+            toast({
+              title: "Group created.",
+              description: "We've created a group for you.",
+              status: "success",
+              duration: 5000,
+              isClosable: true,
+            });
             dispatch(group.actions.setError(null));
           });
         } else {
@@ -57,12 +67,35 @@ const CreateGroup = ({ isOpen, onClose }) => {
       });
   };
 
+  // const options = {
+  //   method: "PATCH",
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //   },
+  //   body: JSON.stringify({ title, description }),
+  // };
+  // fetch(API_URL(`${taskId}/groups/${groupId}`), options)
+  //   .then((res) => res.json())
+  //   .then((data) => {
+  //     if (data.success) {
+  //       batch(() => {
+  //         dispatch(task.actions.setNewTask(data.response));
+  //         dispatch(group.actions.setError(null));
+  //       });
+  //     } else {
+  //       batch(() => {
+  //         dispatch(group.actions.setError(data.response));
+  //       });
+  //       setError(true);
+  //     }
+  //   });
+
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Heading</ModalHeader>
+          <ModalHeader>Create Group</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Box>
@@ -87,9 +120,24 @@ const CreateGroup = ({ isOpen, onClose }) => {
                   value={description}
                   onChange={(event) => setDescription(event.target.value)}
                 />
-                <Button type="submit">Create new group</Button>
-                <Button onClick={onClose}>Close</Button>
+                {/* <FormLabel htmlFor="tasks" />
+                <Input
+                  variant="filled"
+                  mb={3}
+                  type="text"
+                  id="tasks"
+                  placeholder="Add task (you can add tasks later)"
+                  value={task}
+                  onChange={(event) => setTask(event.target.value)}
+                />
+                <button>+</button> */}
+
+                <Box m={4}>
+                  <Button type="submit">Create new group</Button>
+                  <Button onClick={onClose}>Close</Button>
+                </Box>
               </form>
+
               {error && <p>{errorMess}</p>}
             </Box>
           </ModalBody>

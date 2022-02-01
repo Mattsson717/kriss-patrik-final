@@ -1,37 +1,52 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { useSelector } from "react-redux";
+import { API_URL } from "../utils/constants";
 
 export const task = createSlice({
   name: "task",
   initialState: {
     items: [],
     error: null,
-    isTaken: false,
     // createdAt: new Date(),
   },
   reducers: {
     setItems: (store, action) => {
       store.items = action.payload;
     },
-    setNewTask: (store, action) => {
-      store.items = [action.payload, ...store.items];
+    deleteTask: (store, action) => {
+      store.items = store.items.filter((item) => item._id !== action.payload);
     },
     setError: (store, action) => {
       store.error = action.payload;
     },
-  },
-  // check task as taken
-  toggleTask: (store, action) => {
-    const updatedItems = store.items.map((item) => {
-      if (item._id === action.payload) {
-        const updatedTask = {
-          ...item,
-          isTaken: !item.isTaken,
-        };
-        return updatedTask;
-      } else {
-        return item;
-      }
-    });
-    store.items = updatedItems;
+    toggleTask: (store, action) => {
+      const task = store.items.find((item) => item._id === action.payload);
+      task.taken = !task.taken;
+    },
+    setNewTask: (store, action) => {
+      store.items = [action.payload, ...store.items];
+    },
   },
 });
+
+export const onToggleTask = (id, taken) => {
+  return (dispatch) => {
+    const options = {
+      method: "PATCH",
+      body: JSON.stringify({ taken: !taken ? true : false }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    fetch(API_URL(`tasks//taken`, id), options)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          dispatch(task.actions.toggleTask(id));
+          dispatch(task.actions.setError(null));
+        } else {
+          dispatch(task.actions.setError(data.response));
+        }
+      });
+  };
+};

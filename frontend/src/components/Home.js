@@ -13,13 +13,13 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 
-import user from "../reducers/user";
+// import user from "../reducers/user";
 import CreateGroup from "./pages/CreateGroup";
 
 const Home = () => {
   const accessToken = useSelector((store) => store.user.accessToken);
   const loggedInUser = useSelector((store) => store.user.username);
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const navigate = useNavigate();
 
   // MODAL
@@ -36,24 +36,28 @@ const Home = () => {
     }
   }, [accessToken, navigate]);
 
-  const onButtonClick = () => {
-    batch(() => {
-      dispatch(user.actions.setUserId(null));
-      dispatch(user.actions.setUsername(null));
-      dispatch(user.actions.setEmail(null));
-      dispatch(user.actions.setAccessToken(null));
-    });
-    localStorage.removeItem("user");
-  };
+  // const onButtonClick = () => {
+  //   batch(() => {
+  //     dispatch(user.actions.setUserId(null));
+  //     dispatch(user.actions.setUsername(null));
+  //     dispatch(user.actions.setEmail(null));
+  //     dispatch(user.actions.setAccessToken(null));
+  //   });
+  //   localStorage.removeItem("user");
+  // };
 
   return (
     <Flex
-      m={3}
-      justifyContent={"space-evenly"}
-      alignItems={"center"}
-      h={"100vh"}
+      as="section"
+      d="flex"
+      justifyContent="center"
+      alignItems="start"
+      h="100vh"
+      m={5}
     >
       <Box
+        justifyContent="center"
+        alignItems="center"
         rounded={"lg"}
         bg={useColorModeValue("white", "gray.700")}
         boxShadow={"lg"}
@@ -68,7 +72,7 @@ const Home = () => {
             Some text about TASKS
           </Text>
         </Box>
-        <ButtonGroup spacing="4">
+        <ButtonGroup spacing="4" flexDirection="column" alignSelf={"center"}>
           <Button m={3} colorScheme="teal" onClick={() => navigate("/tasks")}>
             My tasks
           </Button>
@@ -83,11 +87,11 @@ const Home = () => {
             onClose={onCloseCreateGroup}
           />
         </ButtonGroup>
-        <ButtonGroup spacing="4">
+        {/* <ButtonGroup spacing="4">
           <Button m={3} colorScheme="teal" onClick={() => onButtonClick()}>
             Log out
           </Button>
-        </ButtonGroup>
+        </ButtonGroup> */}
       </Box>
     </Flex>
   );

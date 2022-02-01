@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { FaSun, FaMoon } from "react-icons/fa";
 import {
   Flex,
   Heading,
@@ -25,10 +24,6 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [mode, setMode] = useState("signin");
   const [error, setError] = useState(false);
-
-  const { colorMode, toggleColorMode } = useColorMode();
-
-  const isDark = colorMode === "dark";
 
   const errorMess = useSelector((store) => store.user.error);
 
@@ -95,11 +90,6 @@ const Login = () => {
       justifyContent="center"
       // bg={useColorModeValue("gray.50", "gray.800")}
     >
-      <IconButton
-        icon={isDark ? <FaSun /> : <FaMoon />}
-        isRound="true"
-        onClick={toggleColorMode}
-      />
       <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
         <Stack align={"center"}>
           <Heading fontSize={"4x1"}>GIVERS GAME</Heading>
