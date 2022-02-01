@@ -1,19 +1,34 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch, batch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 
 import { API_URL } from "../../utils/constants";
 import { group } from "../../reducers/group";
-import user from "../../reducers/user";
+// import user from "../../reducers/user";
 
-const CreateGroup = () => {
+import {
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalCloseButton,
+  ModalHeader,
+  ModalOverlay,
+  Button,
+  Input,
+  FormLabel,
+  Box,
+} from "@chakra-ui/react";
+
+const CreateGroup = ({ isOpen, onClose }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [error, setError] = useState(false);
 
   // const groupItems = useSelector((store) => store.group.items);
   // const accessToken = useSelector((store) => store.user.accessToken);
   const dispatch = useDispatch();
   // const navigate = useNavigate();
+  const errorMess = useSelector((store) => store.user.error);
 
   const onFormSubmit = (event) => {
     event.preventDefault();
@@ -25,7 +40,7 @@ const CreateGroup = () => {
       },
       body: JSON.stringify({ title, description }),
     };
-    fetch(API_URL("home/group"), options)
+    fetch(API_URL("group"), options)
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
@@ -37,32 +52,50 @@ const CreateGroup = () => {
           batch(() => {
             dispatch(group.actions.setError(data.response));
           });
+          setError(true);
         }
       });
   };
 
   return (
-    <form onSubmit={onFormSubmit}>
-      <div>
-        <label htmlFor="title" />
-        <input
-          type="text"
-          id="title"
-          placeholder="title"
-          value={title}
-          onChange={(event) => setTitle(event.target.value)}
-        />
-        <label htmlFor="description" />
-        <input
-          type="text"
-          id="description"
-          placeholder="description"
-          value={description}
-          onChange={(event) => setDescription(event.target.value)}
-        />
-        <button type="submit">Create new group</button>
-      </div>
-    </form>
+    <>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Heading</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Box>
+              <form onSubmit={onFormSubmit}>
+                <FormLabel htmlFor="title" />
+                <Input
+                  variant="filled"
+                  mb={3}
+                  type="text"
+                  id="title"
+                  placeholder="title"
+                  value={title}
+                  onChange={(event) => setTitle(event.target.value)}
+                />
+                <FormLabel htmlFor="description" />
+                <Input
+                  variant="filled"
+                  mb={3}
+                  type="text"
+                  id="description"
+                  placeholder="description"
+                  value={description}
+                  onChange={(event) => setDescription(event.target.value)}
+                />
+                <Button type="submit">Create new group</Button>
+                <Button onClick={onClose}>Close</Button>
+              </form>
+              {error && <p>{errorMess}</p>}
+            </Box>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+    </>
   );
 };
 

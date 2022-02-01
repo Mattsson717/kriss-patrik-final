@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { API_URL } from "../../utils/constants";
 import { Flex, Box } from "@chakra-ui/react";
 
-import { group } from "../../reducers/group";
+// import { group } from "../../reducers/group";
 import { task } from "../../reducers/task";
 
 const Group = () => {
@@ -28,6 +28,7 @@ const Group = () => {
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
+          dispatch(localStorage.getItem(groupId));
           dispatch(task.actions.setItems(data.response));
           dispatch(task.actions.setError(null));
         } else {
@@ -36,6 +37,8 @@ const Group = () => {
         }
       });
   }, [dispatch, accessToken, groupId]);
+
+  console.log("Task Items:", taskItems);
 
   return (
     <Flex height="vh100" alignItems="center" justifyContent="center">

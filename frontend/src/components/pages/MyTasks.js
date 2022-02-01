@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { API_URL } from "../../utils/constants";
 import { task } from "../../reducers/task";
-import { Input } from "@chakra-ui/react";
+import { Input, Flex, Box, useColorModeValue } from "@chakra-ui/react";
 
 const MyTasks = () => {
   const dispatch = useDispatch();
@@ -35,27 +35,45 @@ const MyTasks = () => {
   }, [dispatch, accessToken, userId]);
 
   return (
-    <div>
-      {taskItems.map((item) => (
-        <div key={item._id}>
-          <ul>
-            <input
-              name={item._id}
-              variant="filled"
-              mb={3}
-              type="checkbox"
-              value={item._id}
-              onChange={() => onToggleTask(item._id)}
-            />
-
-            <li> {item.title} </li>
-            <li> {item.description} </li>
-            <li> {item.group} </li>
-          </ul>
-        </div>
-      ))}
-    </div>
+    <Flex m={3}>
+      <Box
+        rounded={"lg"}
+        bg={useColorModeValue("white", "gray.700")}
+        boxShadow={"lg"}
+        p={8}
+      >
+        {taskItems.map((item) => (
+          <Flex key={item._id}>
+            <Box
+              borderColor={"black"}
+              border={5}
+              borderBottomStyle={"solid"}
+              m={4}
+            >
+              {item.title}
+            </Box>
+          </Flex>
+        ))}
+      </Box>
+    </Flex>
   );
 };
 
 export default MyTasks;
+
+{
+  /* <ul>
+              <input
+                name={item._id}
+                variant="filled"
+                mb={3}
+                type="checkbox"
+                value={item._id}
+                onChange={() => onToggleTask(item._id)}
+              />
+
+              <li> {item.title} </li>
+              <li> {item.description} </li>
+              {/* <li> {item.group} </li> */
+}
+// </ul>
