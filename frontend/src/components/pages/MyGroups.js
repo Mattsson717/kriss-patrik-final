@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { API_URL } from "../../utils/constants";
-import { Flex, Box } from "@chakra-ui/react";
+import { Flex, Box, Text, useColorModeValue, Button } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 
 import { group } from "../../reducers/group";
@@ -14,6 +14,7 @@ const MyGroups = () => {
   const groupItems = useSelector((store) => store.group.items);
   const userId = useSelector((store) => store.user.userId);
   const accessToken = useSelector((store) => store.user.accessToken);
+  const loggedInUser = useSelector((store) => store.user.username);
 
   useEffect(() => {
     const options = {
@@ -48,16 +49,35 @@ const MyGroups = () => {
   console.log("Group Items:", groupItems);
 
   return (
-    <Flex height="vh100" alignItems="center" justifyContent="center">
-      {groupItems.map((item) => (
-        <Box key={item._id}>
-          <button onClick={() => onButtonClick(item._id)}>{item.title}</button>
+    <Flex
+      as="section"
+      d="flex"
+      justifyContent="center"
+      alignItems="start"
+      h="100vh"
+      m={5}
+    >
+      <Box
+        rounded={"lg"}
+        bg={useColorModeValue("white", "gray.700")}
+        boxShadow={"lg"}
+        p={8}
+        w={350}
+      >
+        <Text>{loggedInUser}s Tasks:</Text>
+        {groupItems.map((item) => (
+          <Flex key={item._id}>
+            <Box m={2} w={"80%"} p={2} rounded={"lg"} bg={"teal"}>
+              <Button onClick={() => onButtonClick(item._id)}>
+                {item.title}
+              </Button>
 
-          <p>{item.title}</p>
-          {/* <p>{item.task}</p> */}
-          {/* onclick, POST groupId to local storage */}
-        </Box>
-      ))}
+              {/* <p>{item.task}</p> */}
+              {/* onclick, POST groupId to local storage */}
+            </Box>
+          </Flex>
+        ))}
+      </Box>
     </Flex>
   );
 };
