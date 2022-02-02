@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch, batch } from "react-redux";
 import { API_URL } from "../../utils/constants";
 import { Flex, Box, Text, useColorModeValue, Button } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
@@ -8,13 +8,15 @@ import { group } from "../../reducers/group";
 
 const MyGroups = () => {
   // const [group, setGroup] = useState("");
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const groupId = useSelector((store) => store.group.groupId);
+
+  // const groupId = useSelector((store) => store.group.groupId);
   const groupItems = useSelector((store) => store.group.items);
   const userId = useSelector((store) => store.user.userId);
   const accessToken = useSelector((store) => store.user.accessToken);
   const loggedInUser = useSelector((store) => store.user.username);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const options = {
@@ -30,23 +32,22 @@ const MyGroups = () => {
       .then((data) => {
         if (data.success) {
           dispatch(group.actions.setItems(data.response));
-          // dispatch(group.actions.setGroupId(data.response));
+          dispatch(group.actions.setGroupId(data.response));
           dispatch(group.actions.setError(null));
         } else {
           dispatch(group.actions.setItems([]));
-          // dispatch(group.actions.setGroupId([]));
+          dispatch(group.actions.setGroupId([]));
           dispatch(group.actions.setError(data.response));
         }
       });
-  }, [dispatch, accessToken, userId, groupId]);
+  }, [dispatch, accessToken, userId]);
 
   const onButtonClick = (groupId) => {
     dispatch(group.actions.setGroupId(groupId));
     navigate("/group");
 
-    localStorage.setItem(groupId);
+    localStorage.setItem("group", groupId);
   };
-  console.log("Group Items:", groupItems);
 
   return (
     <Flex

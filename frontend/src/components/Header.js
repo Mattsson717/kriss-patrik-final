@@ -52,6 +52,7 @@ const Header = () => {
       dispatch(user.actions.setAccessToken(null));
     });
     localStorage.removeItem("user");
+    navigate("/home");
   };
 
   return (

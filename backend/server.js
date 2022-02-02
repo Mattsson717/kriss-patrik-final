@@ -429,9 +429,6 @@ app.patch("/user/:userId/groups/:groupId", async (req, res) => {
 
     if (queriedGroup) {
       const queriedUser = await User.findById(userId);
-      console.log("QueriedGroup", queriedGroup);
-      console.log("QueriedUser", queriedUser);
-      console.log("UserId, GroupId", userId, groupId);
       if (queriedUser) {
         const updatedGroup = await Group.findByIdAndUpdate(
           groupId,

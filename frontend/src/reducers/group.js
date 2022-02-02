@@ -1,19 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 // import { API_URL } from "../utils/constants";
 
-const groupStorage = localStorage.getItem("group")
-  ? {
-      groupId: JSON.parse(localStorage.getItem("group")).groupId,
-    }
-  : {
-      groupId: null,
-    };
-
 export const group = createSlice({
   name: "group",
-  groupStorage,
   initialState: {
     items: [],
+    task: [],
+    groupId: null,
     error: null,
   },
   reducers: {
@@ -36,27 +29,10 @@ export const group = createSlice({
       store.items = [action.payload, ...store.items];
     },
     setTask: (store, action) => {
-      store.items = action.payload;
+      store.task = action.payload;
     },
     setError: (store, action) => {
       store.error = action.payload;
     },
   },
 });
-
-// export const showGroup = () => {
-//   return (dispatch) => {
-//     const options = {
-//       method: "GET",
-//     };
-//     fetch(API_URL, options)
-//       .then((res) => res.json())
-//       .then((data) => {
-//         if (data.success) {
-//           dispatch(group.actions.setError(null));
-//         } else {
-//           dispatch(group.actions.setError(data.response));
-//         }
-//       });
-//   };
-// };

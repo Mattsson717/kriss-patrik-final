@@ -36,22 +36,22 @@ const CreateGroup = ({ isOpen, onClose }) => {
   const onFormSubmit = (event) => {
     event.preventDefault();
 
-    const options = {
+    const optionsPost = {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ title, description }),
     };
-    fetch(API_URL("group"), options)
+    fetch(API_URL("group"), optionsPost)
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
           batch(() => {
             dispatch(group.actions.setNewGroup(data.response));
             toast({
-              title: "Group created.",
-              description: "We've created a group for you.",
+              title: "Group succesfully created.",
+              description: "Go to My groups to add members and tasks.",
               status: "success",
               duration: 5000,
               isClosable: true,
@@ -65,30 +65,31 @@ const CreateGroup = ({ isOpen, onClose }) => {
           setError(true);
         }
       });
-  };
 
-  // const options = {
-  //   method: "PATCH",
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //   },
-  //   body: JSON.stringify({ title, description }),
-  // };
-  // fetch(API_URL(`${taskId}/groups/${groupId}`), options)
-  //   .then((res) => res.json())
-  //   .then((data) => {
-  //     if (data.success) {
-  //       batch(() => {
-  //         dispatch(task.actions.setNewTask(data.response));
-  //         dispatch(group.actions.setError(null));
-  //       });
-  //     } else {
-  //       batch(() => {
-  //         dispatch(group.actions.setError(data.response));
-  //       });
-  //       setError(true);
-  //     }
-  //   });
+    // Patch the user to the group
+    // const optionsPatch = {
+    //   method: "PATCH",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify({ userId, groupId }),
+    // };
+    // fetch(API_URL(`user/${userId}/groups/${groupId}`), optionsPatch)
+    //   .then((res) => res.json())
+    //   .then((data) => {
+    //     if (data.success) {
+    //       batch(() => {
+    //         dispatch(task.actions.setNewTask(data.response));
+    //         dispatch(group.actions.setError(null));
+    //       });
+    //     } else {
+    //       batch(() => {
+    //         dispatch(group.actions.setError(data.response));
+    //       });
+    //       setError(true);
+    //     }
+    //   });
+  };
 
   return (
     <>
