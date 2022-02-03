@@ -37,7 +37,6 @@ const CreateGroup = ({ isOpen, onClose }) => {
   const onFormSubmit = (event) => {
     event.preventDefault();
 
-
     // userId in JSON.stringify
     // dispatch(group.actions.setUserId(data.response)) in batch();
     const optionsPost = {
@@ -47,7 +46,7 @@ const CreateGroup = ({ isOpen, onClose }) => {
       },
       body: JSON.stringify({ title, description }),
     };
-    fetch(API_URL("group"), optionsPost)
+    fetch(API_URL(`group/user/${userId}`), optionsPost)
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
@@ -76,7 +75,7 @@ const CreateGroup = ({ isOpen, onClose }) => {
     //   headers: {
     //     "Content-Type": "application/json",
     //   },
-    //   body: JSON.stringify({ userId, groupId }),
+
     // };
     // fetch(API_URL(`user/${userId}/groups/${groupId}`), optionsPatch)
     //   .then((res) => res.json())

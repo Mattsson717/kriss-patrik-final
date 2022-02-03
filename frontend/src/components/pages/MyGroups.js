@@ -72,6 +72,7 @@ const MyGroups = () => {
             <Box m={2} w={"80%"} p={2} rounded={"lg"} bg={"teal"}>
               <Button onClick={() => onButtonClick(item._id)}>
                 {item.title}
+                {item.description}
               </Button>
 
               {/* <p>{item.task}</p> */}

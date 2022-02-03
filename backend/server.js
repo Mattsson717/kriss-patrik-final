@@ -205,49 +205,23 @@ app.get("/tasks/group/:groupId", async (req, res) => {
 
 // POST endpoints
 // Create new GROUP --- WORKS!
-app.post("/group", async (req, res) => {
+app.post("/group/user/:userId", async (req, res) => {
   const { title, description } = req.body;
+  const { userId } = req.params;
+
   try {
-    const newGroup = await new Group({ title, description }).save();
-    res.status(201).json({
-      response: {
-        groupId: newGroup._id,
-        title: newGroup.title,
-        description: newGroup.description,
-      },
-      success: true,
-    });
+    const queriedUser = await User.findById(userId);
+    const newGroup = await new Group({
+      title,
+      description,
+      user: queriedUser,
+    }).save();
+
+    res.status(200).json({ response: newGroup, success: true });
   } catch (error) {
     res.status(400).json({ response: error, success: false });
   }
 });
-
-// TEST CREATE GROUP AND ATTACH USER
-// app.post("/group", async (req, res) => {
-//   const { title, description, userId } = req.body;
-//   try {
-//     const queriedUser = await User.find({
-//       user: { $in: userId.map((item) => item.text) },
-//     });
-
-//     const newGroup = await new Group({
-//       title,
-//       description,
-//       userId: queriedUser,
-//     }).save();
-//     res.status(201).json({
-//       response: {
-//         groupId: newGroup._id,
-//         title: newGroup.title,
-//         description: newGroup.description,
-//         userId: queriedUser,
-//       },
-//       success: true,
-//     });
-//   } catch (error) {
-//     res.status(400).json({ response: error, success: false });
-//   }
-// });
 
 // Create new TASK and push it into the GROUP --- WORKS!
 app.post("/task", async (req, res) => {
