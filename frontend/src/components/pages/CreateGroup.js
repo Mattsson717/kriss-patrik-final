@@ -32,10 +32,14 @@ const CreateGroup = ({ isOpen, onClose }) => {
   const toast = useToast();
   // const navigate = useNavigate();
   const errorMess = useSelector((store) => store.user.error);
+  const userId = useSelector((store) => store.user.userId);
 
   const onFormSubmit = (event) => {
     event.preventDefault();
 
+
+    // userId in JSON.stringify
+    // dispatch(group.actions.setUserId(data.response)) in batch();
     const optionsPost = {
       method: "POST",
       headers: {

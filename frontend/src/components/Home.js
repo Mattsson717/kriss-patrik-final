@@ -36,16 +36,6 @@ const Home = () => {
     }
   }, [accessToken, navigate]);
 
-  // const onButtonClick = () => {
-  //   batch(() => {
-  //     dispatch(user.actions.setUserId(null));
-  //     dispatch(user.actions.setUsername(null));
-  //     dispatch(user.actions.setEmail(null));
-  //     dispatch(user.actions.setAccessToken(null));
-  //   });
-  //   localStorage.removeItem("user");
-  // };
-
   return (
     <Flex
       as="section"
@@ -87,11 +77,7 @@ const Home = () => {
             onClose={onCloseCreateGroup}
           />
         </ButtonGroup>
-        {/* <ButtonGroup spacing="4">
-          <Button m={3} colorScheme="teal" onClick={() => onButtonClick()}>
-            Log out
-          </Button>
-        </ButtonGroup> */}
+
       </Box>
     </Flex>
   );

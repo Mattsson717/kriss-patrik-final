@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 import { API_URL } from "../utils/constants";
 
 export const task = createSlice({
@@ -13,6 +13,9 @@ export const task = createSlice({
     setItems: (store, action) => {
       store.items = action.payload;
     },
+    // setTaskId: (store, action) => {
+    //   store.taskId = action.payload;
+    // },
     deleteTask: (store, action) => {
       store.items = store.items.filter((item) => item._id !== action.payload);
     },

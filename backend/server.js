@@ -222,6 +222,33 @@ app.post("/group", async (req, res) => {
   }
 });
 
+// TEST CREATE GROUP AND ATTACH USER
+// app.post("/group", async (req, res) => {
+//   const { title, description, userId } = req.body;
+//   try {
+//     const queriedUser = await User.find({
+//       user: { $in: userId.map((item) => item.text) },
+//     });
+
+//     const newGroup = await new Group({
+//       title,
+//       description,
+//       userId: queriedUser,
+//     }).save();
+//     res.status(201).json({
+//       response: {
+//         groupId: newGroup._id,
+//         title: newGroup.title,
+//         description: newGroup.description,
+//         userId: queriedUser,
+//       },
+//       success: true,
+//     });
+//   } catch (error) {
+//     res.status(400).json({ response: error, success: false });
+//   }
+// });
+
 // Create new TASK and push it into the GROUP --- WORKS!
 app.post("/task", async (req, res) => {
   const { title, description, group } = req.body;
@@ -354,7 +381,7 @@ app.patch("/tasks/:taskId", async (req, res) => {
   }
 });
 
-// Is TAKEN
+// Is TAKEN --- WORKS!
 app.patch("/tasks/:taskId/taken", async (req, res) => {
   const { taskId } = req.params;
   const { taken } = req.body;

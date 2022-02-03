@@ -38,6 +38,30 @@ const MyTasks = () => {
       });
   }, [dispatch, accessToken, userId]);
 
+  
+  // const onToggleTask = (taskId, taken) => {
+  //   return (dispatch) => {
+  //     const options = {
+  //       method: "PATCH",
+  //       body: JSON.stringify({ taken: !taken ? true : false }),
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //     };
+  //     fetch(API_URL(`tasks/${taskId}/taken`), options)
+  //       .then((res) => res.json())
+  //       .then((data) => {
+  //         if (data.success) {
+  //           dispatch(task.actions.toggleTask(taskId));
+  //           dispatch(task.actions.setError(null));
+  //         } else {
+  //           dispatch(task.actions.setError(data.response));
+  //         }
+  //       });
+  //     console.log("Task ID", taskId);
+  //   };
+  // };
+
   return (
     <Flex
       as="section"
@@ -70,16 +94,6 @@ const MyTasks = () => {
                   onChange={() => dispatch(onToggleTask(item._id, item.taken))}
                 />
               </Stack>
-              {/* <input
-                name={item._id}
-                variant="filled"
-                mb={3}
-                type="checkbox"
-                value={item._id}
-                onChange={() => dispatch(onToggleTask(item._id, item.taken))}
-              /> */}
-
-              {/* <li> {item.group} </li> */}
 
               {item.taken}
             </Box>

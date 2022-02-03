@@ -47,6 +47,7 @@ const MyGroups = () => {
     navigate("/group");
 
     localStorage.setItem("group", groupId);
+    // Do we need this? Maks removed it from group.js
   };
 
   return (

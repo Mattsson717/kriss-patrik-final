@@ -1,10 +1,17 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { API_URL } from "../../utils/constants";
-import { Flex, Box } from "@chakra-ui/react";
+import {  
+  Flex,
+  Box,
+  useColorModeValue,
+  Stack,
+  Checkbox, 
+} from "@chakra-ui/react";
 
 // import { group } from "../../reducers/group";
 import { group } from "../../reducers/group";
+import { onToggleTask } from "../../reducers/task";
 
 const Group = () => {
   // const [items, setItems] = useState("");
@@ -39,23 +46,42 @@ const Group = () => {
       });
   }, [dispatch, accessToken, groupId]);
 
-  console.log("Group Items:", groupItems);
-  // console.log("Task Items:", taskItems);
-
-  // const displayTasks = groupItems.map((group) =>
-  //   group.task.map((task) => task.items)
-  // );
-  // console.log("display task:", displayTasks);
   return (
-    <Flex height="vh100" alignItems="center" justifyContent="center">
-      {groupItems.map((item) => (
-        <Box key={item._id}>
-          <p>Title: {item.title}</p>
-          <p>Description: {item.description}</p>
-
-          {/* <p>{item.createdAt}</p> */}
-        </Box>
-      ))}
+    <Flex
+      as="section"
+      d="flex"
+      justifyContent="center"
+      alignItems="start"
+      h="100vh"
+      m={5}
+    >
+      <Box
+        rounded={"lg"}
+        bg={useColorModeValue("white", "gray.700")}
+        boxShadow={"lg"}
+        p={8}
+        w={350}
+      >
+        {groupItems.map((item) => (
+          <Box key={item._id}>
+            <p>Title: {item.title}</p>
+            <p>Description: {item.description}</p>
+            <Stack spacing={5} direction="row">
+              <Checkbox
+                colorScheme="teal"
+                name={item._id}
+                variant="filled"
+                mb={3}
+                type="checkbox"
+                value={item._id}
+                checked={item.taken}
+                onChange={() => dispatch(onToggleTask(item._id, item.taken))}
+              />
+            </Stack>
+            {/* <p>{item.createdAt}</p> */}
+          </Box>
+        ))}
+      </Box>
     </Flex>
   );
 };

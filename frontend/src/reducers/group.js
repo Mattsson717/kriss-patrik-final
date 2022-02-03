@@ -6,6 +6,7 @@ export const group = createSlice({
   initialState: {
     items: [],
     task: [],
+    // userId: [],
     groupId: null,
     error: null,
   },
