@@ -13,9 +13,9 @@ export const task = createSlice({
     setItems: (store, action) => {
       store.items = action.payload;
     },
-    // setTaskId: (store, action) => {
-    //   store.taskId = action.payload;
-    // },
+    setTaskId: (store, action) => {
+      store.taskId = action.payload;
+    },
     deleteTask: (store, action) => {
       store.items = store.items.filter((item) => item._id !== action.payload);
     },
@@ -53,3 +53,30 @@ export const onToggleTask = (id, taken) => {
       });
   };
 };
+
+// export const onAddTask = (taskInput) => {
+//   return (dispatch) => {
+//     // dispatch(ui.actions.setLoading(true));
+//     const options = {
+//       method: "POST",
+//       body: JSON.stringify({
+//         title: taskInput,
+//         description: taskInput,
+//       }),
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//     };
+//     fetch(API_URL("task"), options)
+//       .then((res) => res.json())
+//       .then((data) => {
+//         if (data.success) {
+//           dispatch(task.actions.setError(null));
+//         } else {
+//           dispatch(task.actions.setError(data.response));
+//         }
+//       });
+// .finally(() => dispatch(showTasksStopLoading(400)));
+// setTaskInput("");
+//   };
+// };

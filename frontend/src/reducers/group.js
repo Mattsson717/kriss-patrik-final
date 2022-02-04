@@ -29,6 +29,9 @@ export const group = createSlice({
     setNewGroup: (store, action) => {
       store.items = [action.payload, ...store.items];
     },
+    setNewTask: (store, action) => {
+      store.items = [action.payload, ...store.items];
+    },
     setTask: (store, action) => {
       store.task = action.payload;
     },

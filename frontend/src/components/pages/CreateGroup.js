@@ -137,7 +137,10 @@ const CreateGroup = ({ isOpen, onClose }) => {
                 <button>+</button> */}
 
                 <Box m={4}>
-                  <Button type="submit">Create new group</Button>
+                  {/* Disable button if input fields are empty */}
+                  <Button type="submit" onClick={onClose}>
+                    Create new group
+                  </Button>
                   <Button onClick={onClose}>Close</Button>
                 </Box>
               </form>

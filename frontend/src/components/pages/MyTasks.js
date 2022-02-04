@@ -38,7 +38,6 @@ const MyTasks = () => {
       });
   }, [dispatch, accessToken, userId]);
 
-  
   // const onToggleTask = (taskId, taken) => {
   //   return (dispatch) => {
   //     const options = {
@@ -82,8 +81,11 @@ const MyTasks = () => {
         {taskItems.map((item) => (
           <Flex key={item._id}>
             <Box m={2} w={"80%"} p={2} rounded={"lg"} bg={"teal"}>
-              <span>{item.description}</span>
-              <Stack spacing={5} direction="row">
+              <span>
+                {item.title}
+                {item.description}
+              </span>
+              {/* <Stack spacing={5} direction="row">
                 <Checkbox
                   colorScheme="teal"
                   name={item._id}
@@ -93,7 +95,7 @@ const MyTasks = () => {
                   value={item._id}
                   onChange={() => dispatch(onToggleTask(item._id, item.taken))}
                 />
-              </Stack>
+              </Stack> */}
 
               {item.taken}
             </Box>

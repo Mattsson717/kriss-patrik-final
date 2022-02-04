@@ -224,24 +224,54 @@ app.post("/group/user/:userId", async (req, res) => {
 });
 
 // Create new TASK and push it into the GROUP --- WORKS!
-app.post("/task", async (req, res) => {
-  const { title, description, group } = req.body;
+app.post("/task/group/:groupId", async (req, res) => {
+  const { title, description } = req.body;
+  const { groupId } = req.params;
 
   try {
-    const newTask = await new Task({
-      title,
-      description,
-    }).save();
-    await Group.findByIdAndUpdate(group, {
-      $push: {
-        task: newTask,
-      },
-    });
-
-    res.status(201).json({ response: newTask, success: true });
+    const queriedGroup = await Group.findById(groupId);
+    if (queriedGroup) {
+      const newTask = await Task({
+        title,
+        description,
+      }).save();
+      if (newTask) {
+        const updatedGroup = await Group.findByIdAndUpdate(
+          groupId,
+          {
+            $push: {
+              task: newTask,
+            },
+          },
+          { new: true }
+        );
+        res.status(200).json({ response: updatedGroup, success: true });
+      }
+    } else {
+      res.status(404).json({ response: "Group not found", success: false });
+    }
   } catch (error) {
     res.status(400).json({ response: error, success: false });
   }
+
+  // const { title, description } = req.body;
+
+  // try {
+  //   const newTask = await new Task({
+  //     title,
+  //     description,
+  //     task: req.taskId,
+  //   }).save();
+  //   await Group.findByIdAndUpdate(group, {
+  //     $push: {
+  //       task: newTask,
+  //     },
+  //   });
+
+  //   res.status(201).json({ response: newTask, success: true });
+  // } catch (error) {
+  //   res.status(400).json({ response: error, success: false });
+  // }
 });
 
 // SIGNUP endpoint --- WORKS!
