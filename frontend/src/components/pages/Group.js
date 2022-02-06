@@ -22,6 +22,7 @@ import { EditIcon } from "@chakra-ui/icons";
 
 import Edit from "../modals/Edit";
 import AddTask from "../modals/AddTask";
+import AddMember from "../modals/AddMember";
 import { group } from "../../reducers/group";
 import { task } from "../../reducers/task";
 import { onToggleTask } from "../../reducers/task";
@@ -52,6 +53,11 @@ const Group = () => {
     isOpen: isOpenEdit,
     onOpen: onOpenEdit,
     onClose: onCloseEdit,
+  } = useDisclosure();
+  const {
+    isOpen: isOpenMember,
+    onOpen: onOpenMember,
+    onClose: onCloseMember,
   } = useDisclosure();
 
   const onButtonClick = (taskId) => {
@@ -158,6 +164,10 @@ const Group = () => {
           ADD TASK
         </Button>
         <AddTask isOpen={isOpenAdd} onClose={onCloseAdd} />
+        <Button variant="link" size="sm" color="teal" onClick={onOpenMember}>
+          ADD Member
+        </Button>
+        <AddMember isOpen={isOpenMember} onClose={onCloseMember} />
       </Box>
     </Flex>
   );
