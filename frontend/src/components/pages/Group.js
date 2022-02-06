@@ -9,8 +9,19 @@ import {
   Checkbox,
   FormLabel,
   Input,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalCloseButton,
+  ModalHeader,
+  ModalOverlay,
+  useDisclosure,
+  Button,
 } from "@chakra-ui/react";
+import { EditIcon } from "@chakra-ui/icons";
 
+import Edit from "../modals/Edit";
+import AddTask from "../modals/AddTask";
 import { group } from "../../reducers/group";
 import { task } from "../../reducers/task";
 import { onToggleTask } from "../../reducers/task";
@@ -30,13 +41,23 @@ const Group = () => {
   const groupId = useSelector((store) => store.group.groupId);
   const accessToken = useSelector((store) => store.user.accessToken);
 
-  // const onFormSubmit = (event) => {
-  //   event.preventDefault();
-  //   if (event.key === "Enter") {
-  //     dispatch(onAddTask(taskInput));
-  //     // setTaskInput("");
-  //   }
-  // };
+  // MODAL
+
+  const {
+    isOpen: isOpenAdd,
+    onOpen: onOpenAdd,
+    onClose: onCloseAdd,
+  } = useDisclosure();
+  const {
+    isOpen: isOpenEdit,
+    onOpen: onOpenEdit,
+    onClose: onCloseEdit,
+  } = useDisclosure();
+
+  const onButtonClick = (taskId) => {
+    dispatch(task.actions.setTaskId(taskId));
+    onOpenEdit();
+  };
 
   //fetch tasks by groupId
   useEffect(() => {
@@ -50,41 +71,41 @@ const Group = () => {
     fetch(API_URL(`tasks/group/${groupId}`), options) //get groupId that was posted with button in Mygroups
       .then((res) => res.json())
       .then((data) => {
-        console.log("Specific Group ID :", groupId);
         if (data.success) {
           dispatch(group.actions.setItems(data.response));
           dispatch(group.actions.setError(null));
         } else {
-          dispatch(group.actions.setItems([]));
           dispatch(group.actions.setError(data.response));
         }
       });
   }, [dispatch, accessToken, groupId]);
 
-  const onFormSubmit = (event) => {
-    event.preventDefault();
+  // const onFormSubmit = (event) => {
+  //   event.preventDefault();
 
-    const options = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: accessToken,
-      },
-      body: JSON.stringify({ title, description, group: groupId }),
-    };
-    fetch(API_URL(`task/group/${groupId}`), options)
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("Specific Group ID :", groupId);
-        if (data.success) {
-          console.log("add todo", data);
-          batch(() => {
-            dispatch(group.actions.setGroupId(data.response));
-            dispatch(group.actions.setNewTask(data.response));
-          });
-        }
-      });
-  };
+  // const options = {
+  //   method: "POST",
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //     Authorization: accessToken,
+  //   },
+  //   body: JSON.stringify({ title, description, group: groupId }),
+  // };
+  // fetch(API_URL(`task/group/${groupId}`), options)
+  //   .then((res) => res.json())
+  //   .then((data) => {
+  //     console.log("Specific Group ID :", groupId);
+  //     if (data.success) {
+  //       console.log("add todo", data);
+  //       dispatch(group.actions.setError(null));
+  //       // batch(() => {
+  //       dispatch(group.actions.setGroupId(data.response));
+  //       dispatch(group.actions.setNewTask(data.response));
+  //       // });
+  //     } else {
+  //       dispatch(group.actions.setError(data.response));
+  //     }
+  //   });
 
   return (
     <Flex
@@ -119,32 +140,24 @@ const Group = () => {
                 onChange={() => dispatch(onToggleTask(item._id, item.taken))}
               />
             </Stack>
-            <p>. Edit Task. Add Members</p>
+            <Button
+              variant="link"
+              size="sm"
+              color="teal"
+              rightIcon={<EditIcon />}
+              onClick={() => onButtonClick(item._id)}
+            >
+              Edit
+            </Button>
+            <Edit isOpen={isOpenEdit} onClose={onCloseEdit} />
+            <p> Add Members. </p>
             {/* <p>{item.createdAt}</p> */}
           </Box>
         ))}
-        <form onSubmit={onFormSubmit}>
-          <FormLabel htmlFor="addTask">Add Task</FormLabel>
-          <Input
-            placeholder="title"
-            variant="filled"
-            mb={3}
-            type="text"
-            id="addTask"
-            value={title}
-            onChange={(event) => setTitle(event.target.value)}
-          />
-          <Input
-            placeholder="description"
-            variant="filled"
-            mb={3}
-            type="text"
-            id="addTask"
-            value={description}
-            onChange={(event) => setDescription(event.target.value)}
-          />
-          <button type="submit">add task</button>
-        </form>
+        <Button variant="link" size="sm" color="teal" onClick={onOpenAdd}>
+          ADD TASK
+        </Button>
+        <AddTask isOpen={isOpenAdd} onClose={onCloseAdd} />
       </Box>
     </Flex>
   );

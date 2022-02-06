@@ -46,7 +46,7 @@ const MyGroups = () => {
     dispatch(group.actions.setGroupId(groupId));
     navigate("/group");
 
-    localStorage.setItem("group", groupId);
+    // localStorage.setItem("group", groupId);
     // Do we need this? Maks removed it from group.js
   };
 

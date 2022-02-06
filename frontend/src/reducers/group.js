@@ -1,9 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
 // import { API_URL } from "../utils/constants";
+// const groupStorage = localStorage.getItem("group")
+//   ? {
+//       groupId: JSON.parse(localStorage.getItem("group")).groupId,
+//     }
+//   : {
+//       groupId: null,
+//     };
 
 export const group = createSlice({
   name: "group",
   initialState: {
+    // groupStorage,
     items: [],
     task: [],
     // userId: [],

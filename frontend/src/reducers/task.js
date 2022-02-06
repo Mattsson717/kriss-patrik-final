@@ -32,51 +32,24 @@ export const task = createSlice({
   },
 });
 
-export const onToggleTask = (id, taken) => {
-  return (dispatch) => {
-    const options = {
-      method: "PATCH",
-      body: JSON.stringify({ taken: !taken ? true : false }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
-    fetch(API_URL(`tasks//taken`, id), options)
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success) {
-          dispatch(task.actions.toggleTask(id));
-          dispatch(task.actions.setError(null));
-        } else {
-          dispatch(task.actions.setError(data.response));
-        }
-      });
-  };
-};
-
-// export const onAddTask = (taskInput) => {
+// export const onToggleTask = (id, taken) => {
 //   return (dispatch) => {
-//     // dispatch(ui.actions.setLoading(true));
 //     const options = {
-//       method: "POST",
-//       body: JSON.stringify({
-//         title: taskInput,
-//         description: taskInput,
-//       }),
+//       method: "PATCH",
+//       body: JSON.stringify({ taken: !taken ? true : false }),
 //       headers: {
 //         "Content-Type": "application/json",
 //       },
 //     };
-//     fetch(API_URL("task"), options)
+//     fetch(API_URL(`tasks/${taskId}/taken`, id), options)
 //       .then((res) => res.json())
 //       .then((data) => {
 //         if (data.success) {
+//           dispatch(task.actions.toggleTask(id));
 //           dispatch(task.actions.setError(null));
 //         } else {
 //           dispatch(task.actions.setError(data.response));
 //         }
 //       });
-// .finally(() => dispatch(showTasksStopLoading(400)));
-// setTaskInput("");
 //   };
 // };
