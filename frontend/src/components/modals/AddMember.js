@@ -36,7 +36,6 @@ const AddMember = ({ isOpen, onClose }) => {
   const onFormSubmit = (event) => {
     event.preventDefault();
 
-    // JUST ADDS THE LOGGED IN USER
     const options = {
       method: "PATCH",
       headers: {
@@ -48,7 +47,7 @@ const AddMember = ({ isOpen, onClose }) => {
       .then((data) => {
         if (data.success) {
           batch(() => {
-            dispatch(group.actions.setItems(data.response));
+            // dispatch(group.actions.setItems(data.response));
             toast({
               title: "Group succesfully edited.",
               description: "Some description.",
@@ -88,7 +87,9 @@ const AddMember = ({ isOpen, onClose }) => {
                   onChange={(event) => setUserId(event.target.value)}
                 />
 
-                <button type="submit">add task</button>
+                <button type="submit" onClick={onClose}>
+                  add member
+                </button>
               </form>
             </Box>
           </ModalBody>

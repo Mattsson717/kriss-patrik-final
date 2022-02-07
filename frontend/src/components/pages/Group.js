@@ -1,20 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch, batch } from "react-redux";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { API_URL } from "../../utils/constants";
+import { useNavigate } from "react-router-dom";
 import {
   Flex,
   Box,
   useColorModeValue,
   Stack,
   Checkbox,
-  FormLabel,
-  Input,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalCloseButton,
-  ModalHeader,
-  ModalOverlay,
   useDisclosure,
   Button,
 } from "@chakra-ui/react";
@@ -25,14 +18,16 @@ import AddTask from "../modals/AddTask";
 import AddMember from "../modals/AddMember";
 import { group } from "../../reducers/group";
 import { task } from "../../reducers/task";
-import { onToggleTask } from "../../reducers/task";
+// import { onToggleTask } from "../../reducers/task";
 
 const Group = () => {
   // const [taskInput, setTaskInput] = useState("");
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
+  // const [title, setTitle] = useState("");
+  // const [description, setDescription] = useState("");
   // const [error, setError] = useState(false);
   const dispatch = useDispatch();
+
+  const navigate = useNavigate();
 
   // const errorMess = useSelector((store) => store.group.error);
 
@@ -73,7 +68,7 @@ const Group = () => {
         Authorization: accessToken,
       },
     };
-
+    console.log("GROUP ID", groupId);
     fetch(API_URL(`tasks/group/${groupId}`), options) //get groupId that was posted with button in Mygroups
       .then((res) => res.json())
       .then((data) => {
@@ -86,32 +81,28 @@ const Group = () => {
       });
   }, [dispatch, accessToken, groupId]);
 
-  // const onFormSubmit = (event) => {
-  //   event.preventDefault();
-
-  // const options = {
-  //   method: "POST",
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //     Authorization: accessToken,
-  //   },
-  //   body: JSON.stringify({ title, description, group: groupId }),
-  // };
-  // fetch(API_URL(`task/group/${groupId}`), options)
-  //   .then((res) => res.json())
-  //   .then((data) => {
-  //     console.log("Specific Group ID :", groupId);
-  //     if (data.success) {
-  //       console.log("add todo", data);
-  //       dispatch(group.actions.setError(null));
-  //       // batch(() => {
-  //       dispatch(group.actions.setGroupId(data.response));
-  //       dispatch(group.actions.setNewTask(data.response));
-  //       // });
-  //     } else {
-  //       dispatch(group.actions.setError(data.response));
-  //     }
-  //   });
+  const onToggleTask = (taskId, taken) => {
+    const options = {
+      method: "PATCH",
+      body: JSON.stringify({
+        taken: !taken,
+        _id: taskId,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    fetch(API_URL(`tasks/${taskId}/taken`), options)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          dispatch(group.actions.toggleTask(taskId));
+          dispatch(group.actions.setError(null));
+        } else {
+          dispatch(group.actions.setError(data.response));
+        }
+      });
+  };
 
   return (
     <Flex
@@ -138,12 +129,16 @@ const Group = () => {
               <Checkbox
                 colorScheme="teal"
                 name={item._id}
+                id={item._id}
                 variant="filled"
                 mb={3}
                 type="checkbox"
                 value={item._id}
                 checked={item.taken}
-                onChange={() => dispatch(onToggleTask(item._id, item.taken))}
+                // onChange={() => dispatch(onToggleTask(item._id, item.taken))}
+                onChange={() => onToggleTask(item._id, item.taken)}
+
+                // onChange= app.patch("/tasks/:taskId/taken", async (req, res) => {
               />
             </Stack>
             <Button

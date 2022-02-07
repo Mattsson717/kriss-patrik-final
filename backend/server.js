@@ -4,8 +4,6 @@ import mongoose from "mongoose";
 import crypto from "crypto";
 import bcrypt from "bcrypt";
 
-//Kriss is here
-
 //setting up local database
 const mongoUrl = process.env.MONGO_URL || "mongodb://localhost/final";
 mongoose.connect(mongoUrl, {
@@ -85,7 +83,6 @@ const TaskSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Group",
   },
-
   taken: {
     type: Boolean,
     default: false,
@@ -94,9 +91,6 @@ const TaskSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
-
-  //taken by: default none, later user id  (Possible to add helper or leave blank)
-
   createdAt: {
     type: Date,
     default: Date.now,
@@ -119,7 +113,7 @@ const authenticateUser = async (req, res, next) => {
   try {
     const user = await User.findOne({ accessToken });
     if (user) {
-      next(); // built in function for express that makes the app move along if there's for example an user
+      next();
     } else {
       res.status(401).json({
         response: {
@@ -170,18 +164,6 @@ app.get("/groups/user/:userId", async (req, res) => {
     } else {
       res.status(404).json({ response: "User not found", success: false });
     }
-  } catch (error) {
-    res.status(400).json({ response: error, success: false });
-  }
-});
-
-// GET GROUPS by GROUP ID --- WORKS
-app.get("/groups/:groupId", async (req, res) => {
-  const { groupId } = req.params;
-
-  try {
-    const group = await Group.findById(groupId);
-    res.status(200).json({ response: group, success: true });
   } catch (error) {
     res.status(400).json({ response: error, success: false });
   }
@@ -244,8 +226,8 @@ app.post("/task/group/:groupId", async (req, res) => {
             },
           },
           { new: true }
-        );
-        res.status(200).json({ response: updatedGroup, success: true });
+        ).populate("task");
+        res.status(200).json({ response: updatedGroup.task, success: true });
       }
     } else {
       res.status(404).json({ response: "Group not found", success: false });
@@ -253,25 +235,6 @@ app.post("/task/group/:groupId", async (req, res) => {
   } catch (error) {
     res.status(400).json({ response: error, success: false });
   }
-
-  // const { title, description } = req.body;
-
-  // try {
-  //   const newTask = await new Task({
-  //     title,
-  //     description,
-  //     task: req.taskId,
-  //   }).save();
-  //   await Group.findByIdAndUpdate(group, {
-  //     $push: {
-  //       task: newTask,
-  //     },
-  //   });
-
-  //   res.status(201).json({ response: newTask, success: true });
-  // } catch (error) {
-  //   res.status(400).json({ response: error, success: false });
-  // }
 });
 
 // SIGNUP endpoint --- WORKS!
@@ -367,7 +330,7 @@ app.delete("/groups/:groupId", async (req, res) => {
 });
 
 // PATCH endpoints
-// Patch Task by Id --- WORKS!
+// Patch Task by Id --- WORKS! ---Deletes the blank input
 app.patch("/tasks/:taskId", async (req, res) => {
   const { taskId } = req.params;
 
@@ -412,39 +375,6 @@ app.patch("/group/:groupId", async (req, res) => {
     });
     if (updatedGroup) {
       res.json(updatedGroup);
-    } else {
-      res.status(404).json({ response: "Group not found", success: false });
-    }
-  } catch (error) {
-    res.status(400).json({ response: error, success: false });
-  }
-});
-
-// Insert task in group --- WORKS!
-app.patch("/tasks/:taskId/groups/:groupId", async (req, res) => {
-  const { groupId, taskId } = req.params;
-
-  try {
-    const queriedGroup = await Group.findById(groupId);
-
-    if (queriedGroup) {
-      const queriedTask = await Task.findById(taskId);
-
-      if (queriedTask) {
-        const updatedGroup = await Group.findByIdAndUpdate(
-          groupId,
-          {
-            $push: {
-              task: queriedTask,
-            },
-          },
-          { new: true }
-        );
-
-        res.status(200).json({ response: updatedGroup, success: true });
-      } else {
-        res.status(404).json({ response: "User not found", success: false });
-      }
     } else {
       res.status(404).json({ response: "Group not found", success: false });
     }

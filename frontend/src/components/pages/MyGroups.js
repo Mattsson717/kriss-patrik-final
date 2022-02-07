@@ -1,7 +1,15 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch, batch } from "react-redux";
 import { API_URL } from "../../utils/constants";
-import { Flex, Box, Text, useColorModeValue, Button } from "@chakra-ui/react";
+import {
+  Flex,
+  Box,
+  Text,
+  useColorModeValue,
+  Link,
+  Divider,
+} from "@chakra-ui/react";
+import { createBreakpoints } from "@chakra-ui/theme-tools";
 import { useNavigate } from "react-router-dom";
 
 import { group } from "../../reducers/group";
@@ -17,6 +25,15 @@ const MyGroups = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  // Chakra responsive
+  // const breakpoints = createBreakpoints({
+  //   sm: "30em",
+  //   md: "48em",
+  //   lg: "62em",
+  //   xl: "80em",
+  //   "2xl": "96em",
+  // });
 
   useEffect(() => {
     const options = {
@@ -45,42 +62,33 @@ const MyGroups = () => {
   const onButtonClick = (groupId) => {
     dispatch(group.actions.setGroupId(groupId));
     navigate("/group");
-
-    // localStorage.setItem("group", groupId);
-    // Do we need this? Maks removed it from group.js
   };
 
   return (
     <Flex
-      as="section"
-      d="flex"
-      justifyContent="center"
-      alignItems="start"
-      h="100vh"
-      m={5}
+      maxW="1000px"
+      w={["90vw", "90vw", "70vw", "70vw"]}
+      direction={["column", "column", "row", "row"]}
+      justify={"center"}
+      boxShadow={"md"}
+      rounded={"lg"}
+      p={4}
     >
-      <Box
-        rounded={"lg"}
-        bg={useColorModeValue("white", "gray.700")}
-        boxShadow={"lg"}
-        p={8}
-        w={350}
-      >
-        <Text>{loggedInUser}s Tasks:</Text>
-        {groupItems.map((item) => (
-          <Flex key={item._id}>
-            <Box m={2} w={"80%"} p={2} rounded={"lg"} bg={"teal"}>
-              <Button onClick={() => onButtonClick(item._id)}>
-                {item.title}
-                {item.description}
-              </Button>
+      <Text as="h2" fontSize="xl" fontWeight="bold" mb="2">
+        {loggedInUser}s Groups:
+      </Text>
 
-              {/* <p>{item.task}</p> */}
-              {/* onclick, POST groupId to local storage */}
-            </Box>
-          </Flex>
-        ))}
-      </Box>
+      {groupItems.map((item) => (
+        <Flex align="center" mx="2" key={item._id}>
+          <Box mx="4" border={"solid"} borderColor={"red"}>
+            <Link mb="2" p={5} onClick={() => onButtonClick(item._id)}>
+              {item.title}
+              {/* {item.description} */}
+            </Link>
+          </Box>
+          <Divider orientation="vertical" borderColor="gray.300" my="2" />
+        </Flex>
+      ))}
     </Flex>
   );
 };

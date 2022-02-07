@@ -34,7 +34,7 @@ export const App = () => {
         <BrowserRouter>
           <Header />
           <Routes>
-            {/* {path === "/" ?  : <Header />} */}
+            {/* {path === "/" && "/login"  : <Header />} */}
             <Route path="/" element={<Start />} />
             <Route path="/login" element={<Login />} />
             <Route path="/home" element={<Home />} />

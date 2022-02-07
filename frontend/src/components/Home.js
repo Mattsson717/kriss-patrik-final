@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useSelector, useDispatch, batch } from "react-redux";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -77,7 +77,6 @@ const Home = () => {
             onClose={onCloseCreateGroup}
           />
         </ButtonGroup>
-
       </Box>
     </Flex>
   );

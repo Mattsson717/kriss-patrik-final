@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useSelector, useDispatch, batch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 // import { useNavigate } from "react-router-dom";
 
 import { API_URL } from "../../utils/constants";
@@ -13,7 +13,6 @@ import {
   ModalCloseButton,
   ModalHeader,
   ModalOverlay,
-  Button,
   Input,
   FormLabel,
   Box,
@@ -23,21 +22,20 @@ import {
 const AddTask = ({ isOpen, onClose }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [error, setError] = useState(false);
+  // const [error, setError] = useState(false);
 
   // const groupItems = useSelector((store) => store.group.items);
   // const accessToken = useSelector((store) => store.user.accessToken);
   const dispatch = useDispatch();
   const toast = useToast();
 
-  const errorMess = useSelector((store) => store.user.error);
+  // const errorMess = useSelector((store) => store.user.error);
   const groupId = useSelector((store) => store.group.groupId);
   const accessToken = useSelector((store) => store.user.accessToken);
 
   const onFormSubmit = (event) => {
     event.preventDefault();
 
-    // DELETES THE INPUT THAT'S NOT FILLED IN
     const options = {
       method: "POST",
       headers: {
@@ -53,9 +51,15 @@ const AddTask = ({ isOpen, onClose }) => {
         if (data.success) {
           console.log("add todo", data);
           dispatch(group.actions.setError(null));
+          toast({
+            title: "Task succesfully created.",
+            status: "success",
+            duration: 5000,
+            isClosable: true,
+          });
           // batch(() => {
-          dispatch(group.actions.setGroupId(data.response));
-          dispatch(group.actions.setNewTask(data.response));
+          // dispatch(group.actions.setGroupId(data.response));
+          dispatch(group.actions.setItems(data.response));
           // });
         } else {
           dispatch(group.actions.setError(data.response));
@@ -92,7 +96,9 @@ const AddTask = ({ isOpen, onClose }) => {
                   value={description}
                   onChange={(event) => setDescription(event.target.value)}
                 />
-                <button type="submit">add task</button>
+                <button type="submit" onClick={onClose}>
+                  add task
+                </button>
               </form>
             </Box>
           </ModalBody>

@@ -11,7 +11,6 @@ import { createSlice } from "@reduxjs/toolkit";
 export const group = createSlice({
   name: "group",
   initialState: {
-    // groupStorage,
     items: [],
     task: [],
     // userId: [],
@@ -38,13 +37,19 @@ export const group = createSlice({
       store.items = [action.payload, ...store.items];
     },
     setNewTask: (store, action) => {
-      store.items = [action.payload, ...store.items];
+      store.task = [action.payload, ...store.task];
     },
     setTask: (store, action) => {
       store.task = action.payload;
     },
     setError: (store, action) => {
       store.error = action.payload;
+    },
+    toggleTask: (store, action) => {
+      const toggledTask = store.items.find(
+        (item) => item._id === action.payload
+      );
+      toggledTask.taken = !toggledTask.taken;
     },
   },
 });

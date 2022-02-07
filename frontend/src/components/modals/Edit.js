@@ -4,6 +4,7 @@ import { useSelector, useDispatch, batch } from "react-redux";
 
 import { API_URL } from "../../utils/constants";
 import { group } from "../../reducers/group";
+import { task } from "../../reducers/task";
 // import user from "../../reducers/user";
 
 import {
@@ -36,7 +37,7 @@ const Edit = ({ isOpen, onClose }) => {
   const onFormSubmit = (event) => {
     event.preventDefault();
 
-    // DELETES THE INPUT THAT'S NOT FILLED IN
+    // DELETES THE INPUT THAT'S NOT FILLED IN, NEED TO REFRESH TO SEE
     const options = {
       method: "PATCH",
       headers: {
@@ -49,7 +50,7 @@ const Edit = ({ isOpen, onClose }) => {
       .then((data) => {
         if (data.success) {
           batch(() => {
-            dispatch(group.actions.setNewGroup(data.response));
+            dispatch(task.actions.setItem(data.response));
             toast({
               title: "Group succesfully edited.",
               description: "Some description.",
