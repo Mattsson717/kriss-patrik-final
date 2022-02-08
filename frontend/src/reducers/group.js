@@ -5,13 +5,17 @@ export const group = createSlice({
   initialState: {
     items: [],
     task: [],
-    // userId: [],
+    taskId: null,
+    title: [],
     groupId: null,
     error: null,
   },
   reducers: {
     setItems: (store, action) => {
       store.items = action.payload;
+    },
+    setTaskId: (store, action) => {
+      store.taskId = action.payload;
     },
     setGroupId: (store, action) => {
       store.groupId = action.payload;

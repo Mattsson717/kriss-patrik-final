@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import {
   Flex,
   Box,
-  useColorModeValue,
+  Text,
   Stack,
   Checkbox,
   useDisclosure,
@@ -29,7 +29,7 @@ const Group = () => {
   // const errorMess = useSelector((store) => store.group.error);
 
   const groupItems = useSelector((store) => store.group.items);
-  // const groupTitle = useSelector((store) => store.group.userId);
+  const groupTitle = useSelector((store) => store.group.title);
   // const taskItems = useSelector((store) => store.group.task);
   const userId = useSelector((store) => store.user.userId);
   const groupId = useSelector((store) => store.group.groupId);
@@ -60,7 +60,7 @@ const Group = () => {
   } = useDisclosure();
 
   const onButtonClick = (taskId) => {
-    dispatch(task.actions.setTaskId(taskId));
+    dispatch(group.actions.setTaskId(taskId));
     onOpenEdit();
   };
 
@@ -139,41 +139,33 @@ const Group = () => {
 
   return (
     <Flex
-      as="section"
-      d="flex"
-      justifyContent="center"
+      maxW="1000px"
+      w={["90vw", "90vw", "70vw", "70vw"]}
+      direction={["column", "column", "row", "row"]}
+      justify="center"
+      p={4}
       alignItems="start"
-      h="100vh"
-      m={5}
     >
-      <Box
-        rounded={"lg"}
-        bg={useColorModeValue("white", "gray.700")}
-        boxShadow={"lg"}
-        p={8}
-        w={350}
-      >
-        <Box>{console.log(groupItems)}</Box>
-        {groupItems.map((item) => (
-          <Box key={item._id}>
-            <p>Title: {item.title}</p>
-            <p>Description: {item.description}</p>
-            <Stack spacing={5} direction="row">
-              <Button onClick={() => onToggleTask(item._id)}>TAKE TASK</Button>
+      <Button variant="link" size="sm" color="teal" onClick={onOpenAdd}>
+        ADD TASK
+      </Button>
+      <AddTask isOpen={isOpenAdd} onClose={onCloseAdd} />
+      <Button variant="link" size="sm" color="teal" onClick={onOpenMember}>
+        ADD Member
+      </Button>
+      <AddMember isOpen={isOpenMember} onClose={onCloseMember} />
 
-              {/* <Checkbox
-                colorScheme="teal"
-                name={item._id}
-                id={item._id}
-                variant="filled"
-                mb={3}
-                type="checkbox"
-                value={item.taken}
-                checked={item.taken}
-                onChange={() => onToggleTask(item._id, item.taken)}
-                onChange={() => checkChange()}
-              /> */}
-            </Stack>
+      {groupItems.map((item) => (
+        <Flex justify="center" align="center" mx="2" key={item._id}>
+          <Box
+            maxW="1000px"
+            w={["90%", "90%", "70%", "70%"]}
+            direction={["column", "column", "row", "row"]}
+            justify="center"
+            boxShadow="md"
+            rounded="lg"
+            p={4}
+          >
             <Button
               variant="link"
               size="sm"
@@ -184,19 +176,21 @@ const Group = () => {
               Edit
             </Button>
             <Edit isOpen={isOpenEdit} onClose={onCloseEdit} />
-            <p> Add Members. </p>
-            {/* <p>{item.createdAt}</p> */}
+            <Box
+              direction={"column"}
+              wordBreak={"break-word"}
+              w={["60vw", "60vw", "50vw", "50vw"]}
+            >
+              <Text mb="2" p={5} fontWeight="bold">
+                Title: {item.title}
+              </Text>
+              <Text>Description: {item.description}</Text>
+
+              <Button onClick={() => onToggleTask(item._id)}>TAKE TASK</Button>
+            </Box>
           </Box>
-        ))}
-        <Button variant="link" size="sm" color="teal" onClick={onOpenAdd}>
-          ADD TASK
-        </Button>
-        <AddTask isOpen={isOpenAdd} onClose={onCloseAdd} />
-        <Button variant="link" size="sm" color="teal" onClick={onOpenMember}>
-          ADD Member
-        </Button>
-        <AddMember isOpen={isOpenMember} onClose={onCloseMember} />
-      </Box>
+        </Flex>
+      ))}
     </Flex>
   );
 };

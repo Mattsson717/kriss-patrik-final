@@ -22,10 +22,10 @@ import {
 } from "@chakra-ui/react";
 
 const Edit = ({ isOpen, onClose }) => {
-  const errorMess = useSelector((store) => store.task.error);
-  const taskId = useSelector((store) => store.task.taskId);
-  const title = useSelector((store) => store.task.title);
-  const description = useSelector((store) => store.task.description);
+  const errorMess = useSelector((store) => store.group.error);
+  const taskId = useSelector((store) => store.group.taskId);
+  const title = useSelector((store) => store.group.title);
+  const description = useSelector((store) => store.group.description);
   // const groupItems = useSelector((store) => store.group.items);
   // const accessToken = useSelector((store) => store.user.accessToken);
   const [taskInfo, setTaskInfo] = useState({
@@ -47,27 +47,29 @@ const Edit = ({ isOpen, onClose }) => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ title, description }),
+      body: JSON.stringify({
+        title: taskInfo.title,
+        description: taskInfo.description,
+      }),
     };
     fetch(API_URL(`tasks/${taskId}`), options)
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
           batch(() => {
-            dispatch(task.actions.setTitle(data.response));
-            dispatch(task.actions.setDescription(data.response));
+            dispatch(group.actions.setItems(data.response));
+            dispatch(group.actions.setDescription(data.response));
             toast({
               title: "Group succesfully edited.",
-              description: "Some description.",
               status: "success",
               duration: 5000,
               isClosable: true,
             });
-            dispatch(task.actions.setError(null));
+            dispatch(group.actions.setError(null));
           });
         } else {
           batch(() => {
-            dispatch(task.actions.setError(data.response));
+            dispatch(group.actions.setError(data.response));
           });
           setError(true);
         }
@@ -91,7 +93,7 @@ const Edit = ({ isOpen, onClose }) => {
                   type="text"
                   id="title"
                   placeholder="title"
-                  value={taskInfo.title}
+                  defaultValue={taskInfo.title}
                   onChange={(event) =>
                     setTaskInfo({ ...taskInfo, title: event.target.value })
                   }
@@ -103,7 +105,7 @@ const Edit = ({ isOpen, onClose }) => {
                   type="text"
                   id="description"
                   placeholder="description"
-                  value={taskInfo.description}
+                  defaultValue={taskInfo.description}
                   onChange={(event) =>
                     setTaskInfo({
                       ...taskInfo,
