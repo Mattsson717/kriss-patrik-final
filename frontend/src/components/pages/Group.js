@@ -16,15 +16,12 @@ import { EditIcon } from "@chakra-ui/icons";
 import Edit from "../modals/Edit";
 import AddTask from "../modals/AddTask";
 import AddMember from "../modals/AddMember";
+import AcceptTask from "../modals/AcceptTask";
 import { group } from "../../reducers/group";
 import { task } from "../../reducers/task";
 // import { onToggleTask } from "../../reducers/task";
 
 const Group = () => {
-  // const [taskInput, setTaskInput] = useState("");
-  // const [title, setTitle] = useState("");
-  // const [description, setDescription] = useState("");
-  // const [error, setError] = useState(false);
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
@@ -32,12 +29,13 @@ const Group = () => {
   // const errorMess = useSelector((store) => store.group.error);
 
   const groupItems = useSelector((store) => store.group.items);
+  // const groupTitle = useSelector((store) => store.group.userId);
   // const taskItems = useSelector((store) => store.group.task);
-
+  const userId = useSelector((store) => store.user.userId);
   const groupId = useSelector((store) => store.group.groupId);
   const accessToken = useSelector((store) => store.user.accessToken);
 
-  // MODAL
+  // MODALS
 
   const {
     isOpen: isOpenAdd,
@@ -53,6 +51,12 @@ const Group = () => {
     isOpen: isOpenMember,
     onOpen: onOpenMember,
     onClose: onCloseMember,
+  } = useDisclosure();
+
+  const {
+    isOpen: isOpenAccept,
+    onOpen: onOpenAccept,
+    onClose: onCloseAccept,
   } = useDisclosure();
 
   const onButtonClick = (taskId) => {
@@ -81,28 +85,57 @@ const Group = () => {
       });
   }, [dispatch, accessToken, groupId]);
 
-  const onToggleTask = (taskId, taken) => {
+  const onToggleTask = (taskId) => {
     const options = {
       method: "PATCH",
       body: JSON.stringify({
-        taken: !taken,
+        user: userId,
         _id: taskId,
       }),
       headers: {
         "Content-Type": "application/json",
       },
     };
-    fetch(API_URL(`tasks/${taskId}/taken`), options)
+    fetch(API_URL(`user/${userId}/tasks/${taskId}`), options)
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
-          dispatch(group.actions.toggleTask(taskId));
+          dispatch(task.actions.setItems(taskId));
+          dispatch(task.actions.setTaskId(data.response));
           dispatch(group.actions.setError(null));
         } else {
           dispatch(group.actions.setError(data.response));
         }
       });
   };
+
+  // const onToggleTask = (taskId, taken) => {
+  //   const options = {
+  //     method: "PATCH",
+  //     body: JSON.stringify({
+  //       taken: !taken,
+  //       _id: taskId,
+  //     }),
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //   };
+  //   fetch(API_URL(`tasks/${taskId}/taken`), options)
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       if (data.success) {
+  //         dispatch(group.actions.toggleTask(taskId));
+  //         dispatch(group.actions.setError(null));
+  //       } else {
+  //         dispatch(group.actions.setError(data.response));
+  //       }
+  //     });
+  // };
+
+  // const checkChange = () => {
+  //   onOpenAccept()
+  //   <AcceptTask isOpen={isOpenAccept} onClose={onCloseAccept} />;
+  // };
 
   return (
     <Flex
@@ -120,26 +153,26 @@ const Group = () => {
         p={8}
         w={350}
       >
-        <Box>Group title</Box>
+        <Box>{console.log(groupItems)}</Box>
         {groupItems.map((item) => (
           <Box key={item._id}>
             <p>Title: {item.title}</p>
             <p>Description: {item.description}</p>
             <Stack spacing={5} direction="row">
-              <Checkbox
+              <Button onClick={() => onToggleTask(item._id)}>TAKE TASK</Button>
+
+              {/* <Checkbox
                 colorScheme="teal"
                 name={item._id}
                 id={item._id}
                 variant="filled"
                 mb={3}
                 type="checkbox"
-                value={item._id}
+                value={item.taken}
                 checked={item.taken}
-                // onChange={() => dispatch(onToggleTask(item._id, item.taken))}
                 onChange={() => onToggleTask(item._id, item.taken)}
-
-                // onChange= app.patch("/tasks/:taskId/taken", async (req, res) => {
-              />
+                onChange={() => checkChange()}
+              /> */}
             </Stack>
             <Button
               variant="link"

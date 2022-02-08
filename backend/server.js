@@ -330,7 +330,7 @@ app.delete("/groups/:groupId", async (req, res) => {
 });
 
 // PATCH endpoints
-// Patch Task by Id --- WORKS! ---Deletes the blank input
+// Patch Task by Id --- WORKS!
 app.patch("/tasks/:taskId", async (req, res) => {
   const { taskId } = req.params;
 
@@ -434,7 +434,7 @@ app.patch("/user/:userId/tasks/:taskId", async (req, res) => {
             },
           },
           { new: true }
-        );
+        ).populate("user");
 
         res.status(200).json({ response: updatedTask, success: true });
       } else {

@@ -69,9 +69,7 @@ const MyGroups = () => {
       maxW="1000px"
       w={["90vw", "90vw", "70vw", "70vw"]}
       direction={["column", "column", "row", "row"]}
-      justify={"center"}
-      boxShadow={"md"}
-      rounded={"lg"}
+      justify="center"
       p={4}
     >
       <Text as="h2" fontSize="xl" fontWeight="bold" mb="2">
@@ -79,12 +77,22 @@ const MyGroups = () => {
       </Text>
 
       {groupItems.map((item) => (
-        <Flex align="center" mx="2" key={item._id}>
-          <Box mx="4" border={"solid"} borderColor={"red"}>
-            <Link mb="2" p={5} onClick={() => onButtonClick(item._id)}>
-              {item.title}
-              {/* {item.description} */}
-            </Link>
+        <Flex justify="center" align="center" mx="2" key={item._id}>
+          <Box
+            maxW="1000px"
+            w={["90%", "90%", "70%", "70%"]}
+            direction={["column", "column", "row", "row"]}
+            justify="center"
+            boxShadow="md"
+            rounded="lg"
+            p={4}
+          >
+            <Box direction={"column"}>
+              <Link mb="2" p={5} onClick={() => onButtonClick(item._id)}>
+                {item.title}
+                {item.description}
+              </Link>
+            </Box>
           </Box>
           <Divider orientation="vertical" borderColor="gray.300" my="2" />
         </Flex>

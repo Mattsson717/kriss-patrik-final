@@ -21,7 +21,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 
-const Edit = ({ isOpen, onClose }) => {
+const AcceptTask = ({ isOpen, onClose }) => {
   const errorMess = useSelector((store) => store.task.error);
   const taskId = useSelector((store) => store.task.taskId);
   const title = useSelector((store) => store.task.title);
@@ -79,48 +79,12 @@ const Edit = ({ isOpen, onClose }) => {
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Edit</ModalHeader>
+          <ModalHeader>Accept task?</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Box>
-              <form onSubmit={onFormSubmit}>
-                <FormLabel htmlFor="title" />
-                <Input
-                  variant="filled"
-                  mb={3}
-                  type="text"
-                  id="title"
-                  placeholder="title"
-                  value={taskInfo.title}
-                  onChange={(event) =>
-                    setTaskInfo({ ...taskInfo, title: event.target.value })
-                  }
-                />
-                <FormLabel htmlFor="description" />
-                <Input
-                  variant="filled"
-                  mb={3}
-                  type="text"
-                  id="description"
-                  placeholder="description"
-                  value={taskInfo.description}
-                  onChange={(event) =>
-                    setTaskInfo({
-                      ...taskInfo,
-                      description: event.target.value,
-                    })
-                  }
-                />
-                {/* DELETE */}
-
-                <Box m={4}>
-                  {/* Disable button if input fields are empty */}
-                  <Button type="submit" onClick={onClose}>
-                    Edit
-                  </Button>
-                  <Button onClick={onClose}>Close</Button>
-                </Box>
-              </form>
+              <Button>Yes</Button>
+              <Button>No</Button>
 
               {error && <p>{errorMess}</p>}
             </Box>
@@ -131,4 +95,4 @@ const Edit = ({ isOpen, onClose }) => {
   );
 };
 
-export default Edit;
+export default AcceptTask;

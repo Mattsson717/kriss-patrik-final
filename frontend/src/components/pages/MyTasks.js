@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { API_URL } from "../../utils/constants";
-import { task, onToggleTask } from "../../reducers/task";
+import { group } from "../../reducers/group";
 import {
   Flex,
   Box,
@@ -13,7 +13,7 @@ import {
 
 const MyTasks = () => {
   const dispatch = useDispatch();
-  const taskItems = useSelector((store) => store.task.items);
+  const taskItems = useSelector((store) => store.group.items);
   const userId = useSelector((store) => store.user.userId);
   const accessToken = useSelector((store) => store.user.accessToken);
   const loggedInUser = useSelector((store) => store.user.username);
@@ -29,11 +29,11 @@ const MyTasks = () => {
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
-          dispatch(task.actions.setItems(data.response));
-          dispatch(task.actions.setError(null));
+          dispatch(group.actions.setItems(data.response));
+          dispatch(group.actions.setError(null));
         } else {
-          dispatch(task.actions.setItems([]));
-          dispatch(task.actions.setError(data.response));
+          dispatch(group.actions.setItems([]));
+          dispatch(group.actions.setError(data.response));
         }
       });
   }, [dispatch, accessToken, userId]);
@@ -63,45 +63,36 @@ const MyTasks = () => {
 
   return (
     <Flex
-      as="section"
-      d="flex"
-      justifyContent="center"
-      alignItems="start"
-      h="100vh"
-      m={5}
+      maxW="1000px"
+      w={["90vw", "90vw", "70vw", "70vw"]}
+      direction={["column", "column", "row", "row"]}
+      justify="center"
+      p={4}
     >
-      <Box
-        rounded={"lg"}
-        bg={useColorModeValue("white", "gray.700")}
-        boxShadow={"lg"}
-        p={8}
-        w={350}
-      >
-        <Text>{loggedInUser}s Tasks:</Text>
-        {taskItems.map((item) => (
-          <Flex key={item._id}>
-            <Box m={2} w={"80%"} p={2} rounded={"lg"} bg={"teal"}>
-              <span>
+      <Text as="h2" fontSize="xl" fontWeight="bold" mb="2">
+        {loggedInUser}s Tasks:
+      </Text>
+
+      {taskItems.map((item) => (
+        <Flex justify="center" align="center" mx="2" key={item._id}>
+          <Box
+            maxW="1000px"
+            w={["90%", "90%", "70%", "70%"]}
+            direction={["column", "column", "row", "row"]}
+            justify="center"
+            boxShadow="md"
+            rounded="lg"
+            p={4}
+          >
+            <Box direction={"column"}>
+              <Text mb="2" p={5}>
                 {item.title}
                 {item.description}
-              </span>
-              {/* <Stack spacing={5} direction="row">
-                <Checkbox
-                  colorScheme="teal"
-                  name={item._id}
-                  variant="filled"
-                  mb={3}
-                  type="checkbox"
-                  value={item._id}
-                  onChange={() => dispatch(onToggleTask(item._id, item.taken))}
-                />
-              </Stack> */}
-
-              {item.taken}
+              </Text>
             </Box>
-          </Flex>
-        ))}
-      </Box>
+          </Box>
+        </Flex>
+      ))}
     </Flex>
   );
 };
