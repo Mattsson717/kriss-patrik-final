@@ -32,9 +32,9 @@ export const App = () => {
       <ChakraProvider>
         <ColorModeScript initialColorMode="light"></ColorModeScript>
         <BrowserRouter>
-          <Header />
+          {/* <Header /> */}
           <Routes>
-            {/* {path === "/" && "/login"  : <Header />} */}
+            {/* (path="/" ? : <Header />) */}
             <Route path="/" element={<Start />} />
             <Route path="/login" element={<Login />} />
             <Route path="/home" element={<Home />} />

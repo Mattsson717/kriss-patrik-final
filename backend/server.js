@@ -233,7 +233,7 @@ app.post("/task/group/:groupId", async (req, res) => {
       res.status(404).json({ response: "Group not found", success: false });
     }
   } catch (error) {
-    res.status(400).json({ response: error, success: false });
+    res.status(400).json({ response: "Title aldready exist", success: false });
   }
 });
 

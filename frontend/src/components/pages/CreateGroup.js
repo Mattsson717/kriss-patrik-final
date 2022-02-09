@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch, batch } from "react-redux";
-// import { useNavigate } from "react-router-dom";
 
 import { API_URL } from "../../utils/constants";
 import { group } from "../../reducers/group";
-// import user from "../../reducers/user";
 
 import {
   Modal,

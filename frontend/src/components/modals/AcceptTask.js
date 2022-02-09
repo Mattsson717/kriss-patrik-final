@@ -5,6 +5,7 @@ import { useSelector, useDispatch, batch } from "react-redux";
 import { API_URL } from "../../utils/constants";
 import { group } from "../../reducers/group";
 import { task } from "../../reducers/task";
+// import { ui } from "./ui";
 // import user from "../../reducers/user";
 
 import {
@@ -42,6 +43,7 @@ const AcceptTask = ({ isOpen, onClose }) => {
     event.preventDefault();
 
     // DELETES THE INPUT THAT'S NOT FILLED IN, NEED TO REFRESH TO SEE
+
     const options = {
       method: "PATCH",
       headers: {

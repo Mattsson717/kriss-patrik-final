@@ -13,7 +13,6 @@ import {
   ModalCloseButton,
   ModalHeader,
   ModalOverlay,
-  Button,
   Input,
   FormLabel,
   Box,
@@ -21,7 +20,7 @@ import {
 } from "@chakra-ui/react";
 
 const AddMember = ({ isOpen, onClose }) => {
-  const [userId, setUserId] = useState("");
+  const [username, setUsername] = useState("");
   const [error, setError] = useState(false);
 
   // const groupItems = useSelector((store) => store.group.items);
@@ -29,7 +28,6 @@ const AddMember = ({ isOpen, onClose }) => {
   const dispatch = useDispatch();
   const toast = useToast();
 
-  const errorMess = useSelector((store) => store.user.error);
   const groupId = useSelector((store) => store.group.groupId);
   // const userId = useSelector((store) => store.user.userId);
 
@@ -42,15 +40,14 @@ const AddMember = ({ isOpen, onClose }) => {
         "Content-Type": "application/json",
       },
     };
-    fetch(API_URL(`user/${userId}/groups/${groupId}`), options)
+    fetch(API_URL(`user/${username}/groups/${groupId}`), options)
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
           batch(() => {
             // dispatch(group.actions.setItems(data.response));
             toast({
-              title: "Group succesfully edited.",
-              description: "Some description.",
+              title: "User succesfully added.",
               status: "success",
               duration: 5000,
               isClosable: true,
@@ -60,6 +57,12 @@ const AddMember = ({ isOpen, onClose }) => {
         } else {
           batch(() => {
             dispatch(group.actions.setError(data.response));
+            toast({
+              title: "User not found",
+              status: "error",
+              duration: 5000,
+              isClosable: true,
+            });
           });
           setError(true);
         }
@@ -83,11 +86,11 @@ const AddMember = ({ isOpen, onClose }) => {
                   mb={3}
                   type="text"
                   id="addMember"
-                  value={userId}
-                  onChange={(event) => setUserId(event.target.value)}
+                  value={username}
+                  onChange={(event) => setUsername(event.target.value)}
                 />
 
-                <button type="submit" onClick={onClose}>
+                <button type="submit" onClick={!error ? "" : onClose}>
                   add member
                 </button>
               </form>

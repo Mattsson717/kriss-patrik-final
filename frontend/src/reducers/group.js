@@ -4,9 +4,9 @@ export const group = createSlice({
   name: "group",
   initialState: {
     items: [],
-    task: [],
     taskId: null,
     title: [],
+    // description: [],  ???
     groupId: null,
     error: null,
   },
@@ -35,17 +35,8 @@ export const group = createSlice({
     setNewTask: (store, action) => {
       store.task = [action.payload, ...store.task];
     },
-    setTask: (store, action) => {
-      store.task = action.payload;
-    },
     setError: (store, action) => {
       store.error = action.payload;
-    },
-    toggleTask: (store, action) => {
-      const toggledTask = store.items.find(
-        (item) => item._id === action.payload
-      );
-      toggledTask.taken = !toggledTask.taken;
     },
   },
 });

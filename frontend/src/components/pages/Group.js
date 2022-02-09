@@ -1,22 +1,22 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { API_URL } from "../../utils/constants";
-import { useNavigate } from "react-router-dom";
+
 import {
   Flex,
   Box,
   Text,
-  Stack,
-  Checkbox,
   useDisclosure,
   Button,
+  useToast,
 } from "@chakra-ui/react";
 import { EditIcon } from "@chakra-ui/icons";
 
 import Edit from "../modals/Edit";
 import AddTask from "../modals/AddTask";
 import AddMember from "../modals/AddMember";
-import AcceptTask from "../modals/AcceptTask";
+// import AcceptTask from "../modals/AcceptTask";
+import Header from "../Header";
 import { group } from "../../reducers/group";
 import { task } from "../../reducers/task";
 // import { onToggleTask } from "../../reducers/task";
@@ -24,19 +24,15 @@ import { task } from "../../reducers/task";
 const Group = () => {
   const dispatch = useDispatch();
 
-  const navigate = useNavigate();
-
-  // const errorMess = useSelector((store) => store.group.error);
-
   const groupItems = useSelector((store) => store.group.items);
-  const groupTitle = useSelector((store) => store.group.title);
-  // const taskItems = useSelector((store) => store.group.task);
+
   const userId = useSelector((store) => store.user.userId);
   const groupId = useSelector((store) => store.group.groupId);
   const accessToken = useSelector((store) => store.user.accessToken);
 
-  // MODALS
+  const toast = useToast();
 
+  // MODALS
   const {
     isOpen: isOpenAdd,
     onOpen: onOpenAdd,
@@ -51,12 +47,6 @@ const Group = () => {
     isOpen: isOpenMember,
     onOpen: onOpenMember,
     onClose: onCloseMember,
-  } = useDisclosure();
-
-  const {
-    isOpen: isOpenAccept,
-    onOpen: onOpenAccept,
-    onClose: onCloseAccept,
   } = useDisclosure();
 
   const onButtonClick = (taskId) => {
@@ -102,96 +92,86 @@ const Group = () => {
         if (data.success) {
           dispatch(task.actions.setItems(taskId));
           dispatch(task.actions.setTaskId(data.response));
-          dispatch(group.actions.setError(null));
+          dispatch(task.actions.setError(null));
+          toast({
+            title: "You have accepted the task.",
+            description: "You can find it in My Tasks",
+            status: "success",
+            duration: 5000,
+            isClosable: true,
+          });
         } else {
-          dispatch(group.actions.setError(data.response));
+          dispatch(task.actions.setError(data.response));
+          toast({
+            title: "Something went wrong.",
+            status: "error",
+            duration: 5000,
+            isClosable: true,
+          });
         }
       });
   };
 
-  // const onToggleTask = (taskId, taken) => {
-  //   const options = {
-  //     method: "PATCH",
-  //     body: JSON.stringify({
-  //       taken: !taken,
-  //       _id: taskId,
-  //     }),
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //   };
-  //   fetch(API_URL(`tasks/${taskId}/taken`), options)
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       if (data.success) {
-  //         dispatch(group.actions.toggleTask(taskId));
-  //         dispatch(group.actions.setError(null));
-  //       } else {
-  //         dispatch(group.actions.setError(data.response));
-  //       }
-  //     });
-  // };
-
-  // const checkChange = () => {
-  //   onOpenAccept()
-  //   <AcceptTask isOpen={isOpenAccept} onClose={onCloseAccept} />;
-  // };
-
   return (
-    <Flex
-      maxW="1000px"
-      w={["90vw", "90vw", "70vw", "70vw"]}
-      direction={["column", "column", "row", "row"]}
-      justify="center"
-      p={4}
-      alignItems="start"
-    >
-      <Button variant="link" size="sm" color="teal" onClick={onOpenAdd}>
-        ADD TASK
-      </Button>
-      <AddTask isOpen={isOpenAdd} onClose={onCloseAdd} />
-      <Button variant="link" size="sm" color="teal" onClick={onOpenMember}>
-        ADD Member
-      </Button>
-      <AddMember isOpen={isOpenMember} onClose={onCloseMember} />
+    <>
+      <Header />
+      <Flex
+        maxW="1000px"
+        w={["90vw", "90vw", "70vw", "70vw"]}
+        direction={["column", "column", "row", "row"]}
+        justify="center"
+        p={4}
+        alignItems="start"
+      >
+        <Button variant="link" size="sm" color="teal" onClick={onOpenAdd}>
+          ADD TASK
+        </Button>
+        <AddTask isOpen={isOpenAdd} onClose={onCloseAdd} />
+        <Button variant="link" size="sm" color="teal" onClick={onOpenMember}>
+          ADD Member
+        </Button>
+        <AddMember isOpen={isOpenMember} onClose={onCloseMember} />
 
-      {groupItems.map((item) => (
-        <Flex justify="center" align="center" mx="2" key={item._id}>
-          <Box
-            maxW="1000px"
-            w={["90%", "90%", "70%", "70%"]}
-            direction={["column", "column", "row", "row"]}
-            justify="center"
-            boxShadow="md"
-            rounded="lg"
-            p={4}
-          >
-            <Button
-              variant="link"
-              size="sm"
-              color="teal"
-              rightIcon={<EditIcon />}
-              onClick={() => onButtonClick(item._id)}
-            >
-              Edit
-            </Button>
-            <Edit isOpen={isOpenEdit} onClose={onCloseEdit} />
+        {groupItems.map((item) => (
+          <Flex justify="center" align="center" mx="2" key={item._id}>
             <Box
-              direction={"column"}
-              wordBreak={"break-word"}
-              w={["60vw", "60vw", "50vw", "50vw"]}
+              maxW="1000px"
+              w={["90%", "90%", "70%", "70%"]}
+              direction={["column", "column", "row", "row"]}
+              justify="center"
+              boxShadow="md"
+              rounded="lg"
+              p={4}
             >
-              <Text mb="2" p={5} fontWeight="bold">
-                Title: {item.title}
-              </Text>
-              <Text>Description: {item.description}</Text>
+              <Button
+                variant="link"
+                size="sm"
+                color="teal"
+                rightIcon={<EditIcon />}
+                onClick={() => onButtonClick(item._id)}
+              >
+                Edit
+              </Button>
+              <Edit isOpen={isOpenEdit} onClose={onCloseEdit} />
+              <Box
+                direction={"column"}
+                wordBreak={"break-word"}
+                w={["60vw", "60vw", "50vw", "50vw"]}
+              >
+                <Text mb="2" p={5} fontWeight="bold">
+                  Title: {item.title}
+                </Text>
+                <Text>Description: {item.description}</Text>
 
-              <Button onClick={() => onToggleTask(item._id)}>TAKE TASK</Button>
+                <Button onClick={() => onToggleTask(item._id)}>
+                  TAKE TASK
+                </Button>
+              </Box>
             </Box>
-          </Box>
-        </Flex>
-      ))}
-    </Flex>
+          </Flex>
+        ))}
+      </Flex>
+    </>
   );
 };
 

@@ -1,11 +1,8 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch, batch } from "react-redux";
-// import { useNavigate } from "react-router-dom";
 
 import { API_URL } from "../../utils/constants";
 import { group } from "../../reducers/group";
-import { task } from "../../reducers/task";
-// import user from "../../reducers/user";
 
 import {
   Modal,
@@ -26,13 +23,12 @@ const Edit = ({ isOpen, onClose }) => {
   const taskId = useSelector((store) => store.group.taskId);
   const title = useSelector((store) => store.group.title);
   const description = useSelector((store) => store.group.description);
-  // const groupItems = useSelector((store) => store.group.items);
-  // const accessToken = useSelector((store) => store.user.accessToken);
+
   const [taskInfo, setTaskInfo] = useState({
     title: title,
     description: description,
   });
-  // const [description, setDescription] = useState("description");
+
   const [error, setError] = useState(false);
 
   const dispatch = useDispatch();
@@ -60,7 +56,7 @@ const Edit = ({ isOpen, onClose }) => {
             dispatch(group.actions.setItems(data.response));
             dispatch(group.actions.setDescription(data.response));
             toast({
-              title: "Group succesfully edited.",
+              title: "Task succesfully edited.",
               status: "success",
               duration: 5000,
               isClosable: true,
@@ -70,6 +66,12 @@ const Edit = ({ isOpen, onClose }) => {
         } else {
           batch(() => {
             dispatch(group.actions.setError(data.response));
+            toast({
+              title: "Something went wrong",
+              status: "error",
+              duration: 5000,
+              isClosable: true,
+            });
           });
           setError(true);
         }
@@ -117,7 +119,7 @@ const Edit = ({ isOpen, onClose }) => {
 
                 <Box m={4}>
                   {/* Disable button if input fields are empty */}
-                  <Button type="submit" onClick={onClose}>
+                  <Button type="submit" onClick={!error ? "" : onClose}>
                     Edit
                   </Button>
                   <Button onClick={onClose}>Close</Button>

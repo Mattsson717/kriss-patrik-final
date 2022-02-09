@@ -24,6 +24,10 @@ const Start = () => {
         boxShadow={"lg"}
         width={600}
       >
+        <Img
+          width={200}
+          src="https://i.ibb.co/qdwgc0h/Pngtree-hand-drawn-heart-shaped-heart-outline-6044489.png"
+        />
         <Heading
           display="inline-block"
           as="h2"
@@ -31,20 +35,18 @@ const Start = () => {
           bgGradient="linear(to-r, teal.400, teal.600)"
           backgroundClip="text"
         >
-          <Img
-            width={300}
-            src="https://i.ibb.co/852S8CK/Love-heart-logo-and-template-vector.jpg"
-          />
           GIVERS GAME
         </Heading>
+
         <Text fontSize="14px" mt={3} mb={2}>
-          So as I terrorize Gotham, I will feed its people hope to poison their
-          souls. I will let them believe that they can survive so that you can
-          watch them climbing over each other to stay in the sun. You can watch
-          me torture an entire city. And then when you’ve truly understood the
-          depth of your failure, we will fulfill Ra’s Al Ghul’s destiny. We will
-          destroy Gotham. And then, when that is done, and Gotham is… ashes Then
-          you have my permission to die.
+          "In Sweden, when someone suffers from loss and grief, we often feel
+          that "we should not disturb", or we offer our help in a text message
+          and then feel that "now we have done our part"… In Italy, it is a
+          matter of principle that the whole family moves in and takes over
+          everything that is part of everyday life. Shopping and cooking,
+          babysitting, cleaning, contributing with money, etc. Everything that
+          just have to work, but which for various reasons suddenly does not
+          when you suffer a loss. " - Helena Sörmander
         </Text>
         <Button
           colorScheme="teal"

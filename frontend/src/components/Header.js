@@ -24,20 +24,6 @@ import {
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import { AiFillHome } from "react-icons/ai";
 
-// const Navlink = ({ children }: { children: ReactNode }) => (
-//   <Link
-//     px={2}
-//     py={1}
-//     rounded={'md'}
-//     _hover={{
-//       textDecoration: 'none',
-//       bg: useColorModeValue('gray.200', 'gray.700'),
-//     }}
-//     href={'#'}>
-//     {children}
-//   </Link>
-// );
-
 const Header = () => {
   const { colorMode, toggleColorMode } = useColorMode();
   const loggedInUser = useSelector((store) => store.user.username);

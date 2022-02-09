@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import Header from "./Header";
 
 import {
   Flex,
@@ -37,61 +38,68 @@ const Home = () => {
   }, [accessToken, navigate]);
 
   return (
-    <Flex
-      as="section"
-      d="flex"
-      justifyContent="center"
-      alignItems="start"
-      h="100vh"
-      m={5}
-      maxW="1000px"
-      w={["90vw", "90vw", "70vw", "70vw"]}
-    >
-      <Flex justify="center" align="center" mx="2">
-        <Box
-          w={["90%", "90%", "70%", "70%"]}
-          justifyContent="center"
-          alignItems="center"
-          rounded={"lg"}
-          bg={useColorModeValue("white", "gray.700")}
-          boxShadow={"lg"}
-          p={8}
-        >
-          <h2>Hello {loggedInUser}!</h2>
-          <Box>
-            <Heading as="h1" fontSize="3xl" fontWeight="semi" color="teal">
-              GIVERS GAME
-            </Heading>
-            <Text mt="1" fontSize="md">
-              Some text about TASKS
-            </Text>
-          </Box>
-          <ButtonGroup
-            spacing="4"
-            flexDirection={["column", "column", "row", "row"]}
-            alignSelf={"center"}
+    <>
+      <Header />
+      <Flex
+        as="section"
+        d="flex"
+        justifyContent="center"
+        alignItems="start"
+        h="100vh"
+        m={5}
+        maxW="1000px"
+        w={["90vw", "90vw", "70vw", "70vw"]}
+      >
+        <Flex justify="center" align="center" mx="2">
+          <Box
+            w={["90%", "90%", "70%", "70%"]}
+            justifyContent="center"
+            alignItems="center"
+            rounded={"lg"}
+            bg={useColorModeValue("white", "gray.700")}
+            boxShadow={"lg"}
+            p={8}
           >
-            <Button m={3} colorScheme="teal" onClick={() => navigate("/tasks")}>
-              My tasks
-            </Button>
-            <Button
-              m={3}
-              colorScheme="teal"
-              onClick={() => navigate("/groups")}
+            <h2>Hello {loggedInUser}!</h2>
+            <Box>
+              <Heading as="h1" fontSize="3xl" fontWeight="semi" color="teal">
+                GIVERS GAME
+              </Heading>
+              <Text mt="1" fontSize="md">
+                Some text about TASKS
+              </Text>
+            </Box>
+            <ButtonGroup
+              spacing="4"
+              flexDirection={["column", "column", "row", "row"]}
+              alignSelf={"center"}
             >
-              My groups
-            </Button>
-            <Button m={3} colorScheme="teal" onClick={onOpenCreateGroup}>
-              Create Group
-            </Button>
-            <CreateGroup
-              isOpen={isOpenCreateGroup}
-              onClose={onCloseCreateGroup}
-            />
-          </ButtonGroup>
-        </Box>
+              <Button
+                m={3}
+                colorScheme="teal"
+                onClick={() => navigate("/tasks")}
+              >
+                My tasks
+              </Button>
+              <Button
+                m={3}
+                colorScheme="teal"
+                onClick={() => navigate("/groups")}
+              >
+                My groups
+              </Button>
+              <Button m={3} colorScheme="teal" onClick={onOpenCreateGroup}>
+                Create Group
+              </Button>
+              <CreateGroup
+                isOpen={isOpenCreateGroup}
+                onClose={onCloseCreateGroup}
+              />
+            </ButtonGroup>
+          </Box>
+        </Flex>
       </Flex>
-    </Flex>
+    </>
   );
 };
 
