@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch, batch } from "react-redux";
-// import { useNavigate } from "react-router-dom";
 
 import { API_URL } from "../../utils/constants";
-import { group } from "../../reducers/group";
-// import user from "../../reducers/user";
+import { group } from "../../reducers/group"; // import user from "../../reducers/user";
 
 import {
   Modal,
@@ -23,13 +21,10 @@ const AddMember = ({ isOpen, onClose }) => {
   const [username, setUsername] = useState("");
   const [error, setError] = useState(false);
 
-  // const groupItems = useSelector((store) => store.group.items);
-  // const accessToken = useSelector((store) => store.user.accessToken);
+  const groupId = useSelector((store) => store.group.groupId);
+
   const dispatch = useDispatch();
   const toast = useToast();
-
-  const groupId = useSelector((store) => store.group.groupId);
-  // const userId = useSelector((store) => store.user.userId);
 
   const onFormSubmit = (event) => {
     event.preventDefault();
@@ -45,7 +40,6 @@ const AddMember = ({ isOpen, onClose }) => {
       .then((data) => {
         if (data.success) {
           batch(() => {
-            // dispatch(group.actions.setItems(data.response));
             toast({
               title: "User succesfully added.",
               status: "success",
@@ -86,6 +80,7 @@ const AddMember = ({ isOpen, onClose }) => {
                   mb={3}
                   type="text"
                   id="addMember"
+                  required
                   value={username}
                   onChange={(event) => setUsername(event.target.value)}
                 />

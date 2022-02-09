@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-// import { useNavigate } from "react-router-dom";
 
 import { API_URL } from "../../utils/constants";
 import { group } from "../../reducers/group";
-// import user from "../../reducers/user";
 
 import {
   Modal,
@@ -17,6 +15,7 @@ import {
   FormLabel,
   Box,
   useToast,
+  Textarea,
 } from "@chakra-ui/react";
 
 const AddTask = ({ isOpen, onClose }) => {
@@ -24,13 +23,11 @@ const AddTask = ({ isOpen, onClose }) => {
   const [description, setDescription] = useState("");
   const [error, setError] = useState(false);
 
-  // const groupItems = useSelector((store) => store.group.items);
-  // const accessToken = useSelector((store) => store.user.accessToken);
-  const dispatch = useDispatch();
-  const toast = useToast();
-
   const groupId = useSelector((store) => store.group.groupId);
   const accessToken = useSelector((store) => store.user.accessToken);
+
+  const dispatch = useDispatch();
+  const toast = useToast();
 
   const onFormSubmit = (event) => {
     event.preventDefault();
@@ -47,7 +44,6 @@ const AddTask = ({ isOpen, onClose }) => {
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
-          console.log("add todo", data);
           dispatch(group.actions.setError(null));
           toast({
             title: "Task succesfully created.",
@@ -55,10 +51,7 @@ const AddTask = ({ isOpen, onClose }) => {
             duration: 5000,
             isClosable: true,
           });
-          // batch(() => {
-          // dispatch(group.actions.setGroupId(data.response));
           dispatch(group.actions.setItems(data.response));
-          // });
         } else {
           dispatch(group.actions.setError(data.response));
           toast({
@@ -89,14 +82,16 @@ const AddTask = ({ isOpen, onClose }) => {
                   mb={3}
                   type="text"
                   id="addTask"
+                  required
                   value={title}
                   onChange={(event) => setTitle(event.target.value)}
                 />
-                <Input
+                <Textarea
                   placeholder="description"
                   variant="filled"
                   mb={3}
                   type="text"
+                  required
                   id="addTask"
                   value={description}
                   onChange={(event) => setDescription(event.target.value)}

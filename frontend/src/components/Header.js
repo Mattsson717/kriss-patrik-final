@@ -57,40 +57,41 @@ const Header = () => {
               <Button rounded={"full"} onClick={toggleColorMode}>
                 {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
               </Button>
-
-              <Menu>
-                <MenuButton
-                  as={Button}
-                  rounded={"full"}
-                  variant={"link"}
-                  cursor={"pointer"}
-                  minW={0}
-                >
-                  <Avatar
-                    size={"sm"}
-                    name={loggedInUser}
-                    src={"https://bit.ly/broken-link"}
-                  />
-                </MenuButton>
-                <MenuList alignItems={"center"}>
-                  <br />
-                  <Center>
+              <Box>
+                <Menu>
+                  <MenuButton
+                    as={Button}
+                    rounded={"full"}
+                    variant={"link"}
+                    cursor={"pointer"}
+                    minW={0}
+                  >
                     <Avatar
-                      size={"2xl"}
+                      size={"sm"}
                       name={loggedInUser}
                       src={"https://bit.ly/broken-link"}
                     />
-                  </Center>
-                  <br />
-                  <Center>
-                    <p>{loggedInUser}</p>
-                  </Center>
-                  <br />
-                  <MenuDivider />
-                  <MenuItem>Account Settings</MenuItem>
-                  <MenuItem onClick={() => onButtonClick()}>Logout</MenuItem>
-                </MenuList>
-              </Menu>
+                  </MenuButton>
+                  <MenuList alignItems={"center"}>
+                    <br />
+                    <Center>
+                      <Avatar
+                        size={"2xl"}
+                        name={loggedInUser}
+                        src={"https://bit.ly/broken-link"}
+                      />
+                    </Center>
+                    <br />
+                    <Center>
+                      <p>{loggedInUser}</p>
+                    </Center>
+                    <br />
+                    <MenuDivider />
+                    <MenuItem>Account Settings</MenuItem>
+                    <MenuItem onClick={() => onButtonClick()}>Logout</MenuItem>
+                  </MenuList>
+                </Menu>
+              </Box>
             </Stack>
           </Flex>
         </Flex>

@@ -7,7 +7,6 @@ import {
   useColorModeValue,
   Stack,
   Box,
-  // FormControl,
   FormLabel,
 } from "@chakra-ui/react";
 import { useSelector, useDispatch, batch } from "react-redux";
@@ -17,15 +16,14 @@ import { API_URL } from "../utils/constants";
 import user from "../reducers/user";
 
 const Login = () => {
+  const errorMess = useSelector((store) => store.user.error);
+  const accessToken = useSelector((store) => store.user.accessToken);
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [mode, setMode] = useState("signin");
   const [error, setError] = useState(false);
-
-  const errorMess = useSelector((store) => store.user.error);
-
-  const accessToken = useSelector((store) => store.user.accessToken);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -57,7 +55,7 @@ const Login = () => {
             dispatch(user.actions.setAccessToken(data.response.accessToken));
             dispatch(user.actions.setEmail(data.response.email));
             dispatch(user.actions.setError(null));
-            //specify the data that we want to save in localStorage 'user' here
+
             localStorage.setItem(
               "user",
               JSON.stringify({
@@ -82,12 +80,7 @@ const Login = () => {
   };
 
   return (
-    <Flex
-      height="vh100"
-      alignItems="center"
-      justifyContent="center"
-      // bg={useColorModeValue("gray.50", "gray.800")}
-    >
+    <Flex height="vh100" alignItems="center" justifyContent="center">
       <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
         <Stack align={"center"}>
           <Heading fontSize={"4x1"}>GIVERS GAME</Heading>

@@ -2,16 +2,12 @@ import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { API_URL } from "../../utils/constants";
 import { Flex, Box, Text, Image, Link, Divider } from "@chakra-ui/react";
-// import { createBreakpoints } from "@chakra-ui/theme-tools";
 import { useNavigate } from "react-router-dom";
 
 import { group } from "../../reducers/group";
 import Header from "../Header";
 
 const MyGroups = () => {
-  // const [group, setGroup] = useState("");
-
-  // const groupId = useSelector((store) => store.group.groupId);
   const groupItems = useSelector((store) => store.group.items);
   const userId = useSelector((store) => store.user.userId);
   const accessToken = useSelector((store) => store.user.accessToken);
@@ -19,15 +15,6 @@ const MyGroups = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  // Chakra responsive
-  // const breakpoints = createBreakpoints({
-  //   sm: "30em",
-  //   md: "48em",
-  //   lg: "62em",
-  //   xl: "80em",
-  //   "2xl": "96em",
-  // });
 
   useEffect(() => {
     const options = {

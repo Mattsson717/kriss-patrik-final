@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Header from "./Header";
+import CreateGroup from "./pages/CreateGroup";
 
 import {
   Flex,
@@ -14,17 +15,13 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 
-// import user from "../reducers/user";
-import CreateGroup from "./pages/CreateGroup";
-
 const Home = () => {
   const accessToken = useSelector((store) => store.user.accessToken);
   const loggedInUser = useSelector((store) => store.user.username);
-  // const dispatch = useDispatch();
+
   const navigate = useNavigate();
 
   // MODAL
-
   const {
     isOpen: isOpenCreateGroup,
     onOpen: onOpenCreateGroup,

@@ -16,6 +16,7 @@ import {
   FormLabel,
   Box,
   useToast,
+  Textarea,
 } from "@chakra-ui/react";
 
 const Edit = ({ isOpen, onClose }) => {
@@ -28,7 +29,6 @@ const Edit = ({ isOpen, onClose }) => {
     title: title,
     description: description,
   });
-
   const [error, setError] = useState(false);
 
   const dispatch = useDispatch();
@@ -37,7 +37,6 @@ const Edit = ({ isOpen, onClose }) => {
   const onFormSubmit = (event) => {
     event.preventDefault();
 
-    // DELETES THE INPUT THAT'S NOT FILLED IN, NEED TO REFRESH TO SEE
     const options = {
       method: "PATCH",
       headers: {
@@ -101,13 +100,14 @@ const Edit = ({ isOpen, onClose }) => {
                   }
                 />
                 <FormLabel htmlFor="description" />
-                <Input
+                <Textarea
                   variant="filled"
                   mb={3}
                   type="text"
                   id="description"
                   placeholder="description"
                   defaultValue={taskInfo.description}
+                  required
                   onChange={(event) =>
                     setTaskInfo({
                       ...taskInfo,
@@ -118,7 +118,6 @@ const Edit = ({ isOpen, onClose }) => {
                 {/* DELETE */}
 
                 <Box m={4}>
-                  {/* Disable button if input fields are empty */}
                   <Button type="submit" onClick={!error ? "" : onClose}>
                     Edit
                   </Button>

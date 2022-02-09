@@ -138,7 +138,7 @@ app.get("/home", async (req, res) => {
   res.send("Home");
 });
 
-// Get all tasks by USER --- WORKS!
+// Get all tasks by USER ID --- WORKS!
 app.get("/tasks/:userId", authenticateUser);
 app.get("/tasks/:userId", async (req, res) => {
   const { userId } = req.params;
@@ -151,7 +151,7 @@ app.get("/tasks/:userId", async (req, res) => {
   }
 });
 
-// GET GROUPS by USERiD --- WORKS!
+// GET GROUPS by USER ID --- WORKS!
 app.get("/groups/user/:userId", async (req, res) => {
   const { userId } = req.params;
 
@@ -186,7 +186,7 @@ app.get("/tasks/group/:groupId", async (req, res) => {
 });
 
 // POST endpoints
-// Create new GROUP --- WORKS!
+// Create new GROUP AND attatch the logged in USER to that GROUP --- WORKS!
 app.post("/group/user/:userId", async (req, res) => {
   const { title, description } = req.body;
   const { userId } = req.params;
@@ -349,21 +349,21 @@ app.patch("/tasks/:taskId", async (req, res) => {
 });
 
 // Is TAKEN --- WORKS!
-app.patch("/tasks/:taskId/taken", async (req, res) => {
-  const { taskId } = req.params;
-  const { taken } = req.body;
+// app.patch("/tasks/:taskId/taken", async (req, res) => {
+//   const { taskId } = req.params;
+//   const { taken } = req.body;
 
-  try {
-    const updatedTaken = await Task.findOneAndUpdate(
-      { _id: taskId },
-      { taken },
-      { new: true }
-    );
-    res.status(200).json({ response: updatedTaken, success: true });
-  } catch (error) {
-    res.status(400).json({ response: error, success: false });
-  }
-});
+//   try {
+//     const updatedTaken = await Task.findOneAndUpdate(
+//       { _id: taskId },
+//       { taken },
+//       { new: true }
+//     );
+//     res.status(200).json({ response: updatedTaken, success: true });
+//   } catch (error) {
+//     res.status(400).json({ response: error, success: false });
+//   }
+// });
 
 // Patch Group by Id --- WORKS!
 app.patch("/group/:groupId", async (req, res) => {

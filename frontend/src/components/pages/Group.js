@@ -15,11 +15,9 @@ import { EditIcon } from "@chakra-ui/icons";
 import Edit from "../modals/Edit";
 import AddTask from "../modals/AddTask";
 import AddMember from "../modals/AddMember";
-// import AcceptTask from "../modals/AcceptTask";
 import Header from "../Header";
 import { group } from "../../reducers/group";
 import { task } from "../../reducers/task";
-// import { onToggleTask } from "../../reducers/task";
 
 const Group = () => {
   const dispatch = useDispatch();
@@ -63,7 +61,7 @@ const Group = () => {
       },
     };
     console.log("GROUP ID", groupId);
-    fetch(API_URL(`tasks/group/${groupId}`), options) //get groupId that was posted with button in Mygroups
+    fetch(API_URL(`tasks/group/${groupId}`), options)
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {

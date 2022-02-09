@@ -16,27 +16,23 @@ import {
   FormLabel,
   Box,
   useToast,
+  Textarea,
 } from "@chakra-ui/react";
 
 const CreateGroup = ({ isOpen, onClose }) => {
   const [title, setTitle] = useState("");
-  // const [task, setTask] = useState("");
   const [description, setDescription] = useState("");
   const [error, setError] = useState(false);
 
-  // const groupItems = useSelector((store) => store.group.items);
-  // const accessToken = useSelector((store) => store.user.accessToken);
-  const dispatch = useDispatch();
-  const toast = useToast();
-  // const navigate = useNavigate();
   const errorMess = useSelector((store) => store.user.error);
   const userId = useSelector((store) => store.user.userId);
+
+  const dispatch = useDispatch();
+  const toast = useToast();
 
   const onFormSubmit = (event) => {
     event.preventDefault();
 
-    // userId in JSON.stringify
-    // dispatch(group.actions.setUserId(data.response)) in batch();
     const optionsPost = {
       method: "POST",
       headers: {
@@ -62,6 +58,12 @@ const CreateGroup = ({ isOpen, onClose }) => {
         } else {
           batch(() => {
             dispatch(group.actions.setError(data.response));
+            toast({
+              title: "Something went wrong",
+              status: "error",
+              duration: 5000,
+              isClosable: true,
+            });
           });
           setError(true);
         }
@@ -87,14 +89,15 @@ const CreateGroup = ({ isOpen, onClose }) => {
                   placeholder="title"
                   value={title}
                   onChange={(event) => setTitle(event.target.value)}
+                  required
                 />
                 <FormLabel htmlFor="description" />
-                <Input
+                <Textarea
                   variant="filled"
                   mb={3}
                   type="text"
                   id="description"
-                  placeholder="description"
+                  placeholder="description (optional)"
                   value={description}
                   onChange={(event) => setDescription(event.target.value)}
                 />
