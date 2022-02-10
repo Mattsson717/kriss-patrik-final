@@ -8,6 +8,7 @@ import {
   Stack,
   Box,
   FormLabel,
+  Link,
 } from "@chakra-ui/react";
 import { useSelector, useDispatch, batch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -37,6 +38,7 @@ const Login = () => {
   const onFormSubmit = (event) => {
     event.preventDefault();
 
+    // Log in/signup
     const options = {
       method: "POST",
       headers: {
@@ -131,29 +133,35 @@ const Login = () => {
                 </>
               )}
               <Flex alignItems="center" justifyContent="center">
-                <Button colorScheme="teal" m={2} type="submit">
-                  Submit
-                </Button>
-
                 {mode === "signin" && (
-                  <Button
-                    colorScheme="teal"
-                    type="button"
-                    m={2}
-                    onClick={() => setMode("signup")}
-                  >
-                    Sign up
-                  </Button>
+                  <>
+                    <Button colorScheme="teal" m={2} type="submit">
+                      Log in
+                    </Button>
+                    <Link
+                      colorScheme="teal"
+                      type="button"
+                      m={2}
+                      onClick={() => setMode("signup")}
+                    >
+                      Sign up
+                    </Link>
+                  </>
                 )}
                 {mode === "signup" && (
-                  <Button
-                    colorScheme="teal"
-                    type="button"
-                    m={2}
-                    onClick={() => setMode("signin")}
-                  >
-                    Login
-                  </Button>
+                  <>
+                    <Button colorScheme="teal" m={2} type="submit">
+                      Submit
+                    </Button>
+                    <Link
+                      colorScheme="teal"
+                      type="button"
+                      m={2}
+                      onClick={() => setMode("signin")}
+                    >
+                      Already have an account?
+                    </Link>
+                  </>
                 )}
               </Flex>
             </form>

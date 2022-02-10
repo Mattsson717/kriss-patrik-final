@@ -77,7 +77,6 @@ const TaskSchema = new mongoose.Schema({
   },
   description: {
     type: String,
-    required: true,
   },
   group: {
     type: mongoose.Schema.Types.ObjectId,

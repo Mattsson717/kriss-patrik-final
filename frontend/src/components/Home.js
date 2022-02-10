@@ -10,7 +10,6 @@ import {
   Box,
   useColorModeValue,
   Heading,
-  Text,
   ButtonGroup,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -44,12 +43,12 @@ const Home = () => {
         alignItems="start"
         h="100vh"
         m={5}
-        maxW="1000px"
+        maxW="500vw"
         w={["90vw", "90vw", "70vw", "70vw"]}
       >
         <Flex justify="center" align="center" mx="2">
           <Box
-            w={["90%", "90%", "70%", "70%"]}
+            w={["100%", "95%", "70%", "70%"]}
             justifyContent="center"
             alignItems="center"
             rounded={"lg"}
@@ -62,9 +61,6 @@ const Home = () => {
               <Heading as="h1" fontSize="3xl" fontWeight="semi" color="teal">
                 GIVERS GAME
               </Heading>
-              <Text mt="1" fontSize="md">
-                Some text about TASKS
-              </Text>
             </Box>
             <ButtonGroup
               spacing="4"

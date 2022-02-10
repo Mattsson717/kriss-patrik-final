@@ -12,6 +12,7 @@ const MyTasks = () => {
   const accessToken = useSelector((store) => store.user.accessToken);
   const loggedInUser = useSelector((store) => store.user.username);
 
+  // Shows the logged in users TASKS
   useEffect(() => {
     const options = {
       method: "GET",
@@ -32,6 +33,7 @@ const MyTasks = () => {
       });
   }, [dispatch, accessToken, userId]);
 
+  // If the logged in user doesnt have any tasks, show this:
   if (taskItems.length === 0) {
     return (
       <>

@@ -37,6 +37,7 @@ const Edit = ({ isOpen, onClose }) => {
   const onFormSubmit = (event) => {
     event.preventDefault();
 
+    // EDIT a specific TASK
     const options = {
       method: "PATCH",
       headers: {

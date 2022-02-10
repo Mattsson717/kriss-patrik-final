@@ -29,6 +29,7 @@ const AddMember = ({ isOpen, onClose }) => {
   const onFormSubmit = (event) => {
     event.preventDefault();
 
+    // ADD a USER into existing GROUP
     const options = {
       method: "PATCH",
       headers: {

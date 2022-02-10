@@ -33,6 +33,7 @@ const CreateGroup = ({ isOpen, onClose }) => {
   const onFormSubmit = (event) => {
     event.preventDefault();
 
+    // CREATE GROUP and attach logged in USER
     const optionsPost = {
       method: "POST",
       headers: {

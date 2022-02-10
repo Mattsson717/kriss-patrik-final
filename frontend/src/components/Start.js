@@ -46,7 +46,10 @@ const Start = () => {
           everything that is part of everyday life. Shopping and cooking,
           babysitting, cleaning, contributing with money, etc. Everything that
           just have to work, but which for various reasons suddenly does not
-          when you suffer a loss. " - Helena Sörmander
+          when you suffer a loss. "
+        </Text>
+        <Text fontSize="14px" mt={3} mb={2} fontWeight="bold">
+          - Helena Sörmander
         </Text>
         <Button
           colorScheme="teal"

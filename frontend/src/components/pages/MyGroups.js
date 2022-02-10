@@ -16,6 +16,7 @@ const MyGroups = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  // Shows the logged in users GROUPS
   useEffect(() => {
     const options = {
       method: "GET",
@@ -24,7 +25,6 @@ const MyGroups = () => {
       },
     };
 
-    // fetch groups by userId
     fetch(API_URL(`groups/user/${userId}`), options)
       .then((res) => res.json())
       .then((data) => {
@@ -40,11 +40,13 @@ const MyGroups = () => {
       });
   }, [dispatch, accessToken, userId]);
 
+  // Opens the specific GROUP
   const onButtonClick = (groupId) => {
     dispatch(group.actions.setGroupId(groupId));
     navigate("/group");
   };
 
+  // If the logged in user doesnt have any groups, show this:
   if (groupItems.length === 0) {
     return (
       <>
@@ -92,8 +94,10 @@ const MyGroups = () => {
               >
                 <Box direction={"column"}>
                   <Link mb="2" p={5} onClick={() => onButtonClick(item._id)}>
-                    {item.title}
-                    {item.description}
+                    <Text mb="2" p={5} fontWeight="bold">
+                      {item.title}
+                    </Text>
+                    <Text> {item.description}</Text>
                   </Link>
                 </Box>
               </Box>

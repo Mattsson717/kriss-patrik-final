@@ -47,12 +47,13 @@ const Group = () => {
     onClose: onCloseMember,
   } = useDisclosure();
 
+  // Takes the task id to open the specific TASK to open EDIT modal
   const onButtonClick = (taskId) => {
     dispatch(group.actions.setTaskId(taskId));
     onOpenEdit();
   };
 
-  //fetch tasks by groupId
+  //fetch TASKS by groupId
   useEffect(() => {
     const options = {
       method: "GET",
@@ -60,7 +61,6 @@ const Group = () => {
         Authorization: accessToken,
       },
     };
-    console.log("GROUP ID", groupId);
     fetch(API_URL(`tasks/group/${groupId}`), options)
       .then((res) => res.json())
       .then((data) => {
@@ -74,6 +74,7 @@ const Group = () => {
       });
   }, [dispatch, accessToken, groupId]);
 
+  // Accept the TASK and send it to the logged in users MY TASKs
   const onTakenTask = (taskId) => {
     const options = {
       method: "PATCH",
@@ -122,14 +123,28 @@ const Group = () => {
         p={4}
         alignItems="start"
       >
-        <Button variant="link" size="sm" color="teal" onClick={onOpenAdd}>
-          ADD TASK
-        </Button>
-        <AddTask isOpen={isOpenAdd} onClose={onCloseAdd} />
-        <Button variant="link" size="sm" color="teal" onClick={onOpenMember}>
-          ADD Member
-        </Button>
-        <AddMember isOpen={isOpenMember} onClose={onCloseMember} />
+        <Box direction="row" justifyContent="center">
+          <Button
+            variant="link"
+            m={3}
+            size="sm"
+            color="teal"
+            onClick={onOpenAdd}
+          >
+            + ADD TASK
+          </Button>
+          <AddTask isOpen={isOpenAdd} onClose={onCloseAdd} />
+          <Button
+            variant="link"
+            m={3}
+            size="sm"
+            color="teal"
+            onClick={onOpenMember}
+          >
+            + ADD MEMBER
+          </Button>
+          <AddMember isOpen={isOpenMember} onClose={onCloseMember} />
+        </Box>
 
         {groupItems.map((item) => (
           <Flex justify="center" align="center" mx="2" key={item._id}>
@@ -157,10 +172,12 @@ const Group = () => {
                 wordBreak={"break-word"}
                 w={["60vw", "60vw", "50vw", "50vw"]}
               >
-                <Text mb="2" p={5} fontWeight="bold">
-                  Title: {item.title}
+                <Text m="2" p={5} fontWeight="bold">
+                  {item.title}
                 </Text>
-                <Text>Description: {item.description}</Text>
+                <Text m="2" p={2}>
+                  {item.description}
+                </Text>
 
                 <Button
                   disabled={!item.user >= 1 ? false : true}

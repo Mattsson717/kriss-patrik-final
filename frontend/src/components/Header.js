@@ -30,6 +30,7 @@ const Header = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  // Logout the user and
   const onButtonClick = () => {
     batch(() => {
       dispatch(user.actions.setUserId(null));
@@ -38,7 +39,7 @@ const Header = () => {
       dispatch(user.actions.setAccessToken(null));
     });
     localStorage.removeItem("user");
-    navigate("/home");
+    navigate("/");
   };
 
   return (

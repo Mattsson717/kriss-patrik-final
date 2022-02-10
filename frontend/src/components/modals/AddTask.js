@@ -16,6 +16,7 @@ import {
   Box,
   useToast,
   Textarea,
+  Button,
 } from "@chakra-ui/react";
 
 const AddTask = ({ isOpen, onClose }) => {
@@ -32,6 +33,7 @@ const AddTask = ({ isOpen, onClose }) => {
   const onFormSubmit = (event) => {
     event.preventDefault();
 
+    // CREATE TASK and put it into the GROUP
     const options = {
       method: "POST",
       headers: {
@@ -87,20 +89,19 @@ const AddTask = ({ isOpen, onClose }) => {
                   onChange={(event) => setTitle(event.target.value)}
                 />
                 <Textarea
-                  placeholder="description"
+                  placeholder="description (optional)"
                   variant="filled"
                   mb={3}
                   type="text"
-                  required
                   id="addTask"
                   value={description}
                   onChange={(event) => setDescription(event.target.value)}
                 />
-                {/* Doesn't close when clicked */}
-                <button type="submit" onClick={!error ? "" : onClose}>
+
+                <Button type="submit" onClick={!error ? "" : onClose}>
                   add task
-                </button>
-                <button onClick={onClose}>Close</button>
+                </Button>
+                <Button onClick={onClose}>Close</Button>
               </form>
             </Box>
           </ModalBody>
