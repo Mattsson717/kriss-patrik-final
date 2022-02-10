@@ -161,7 +161,9 @@ const Group = () => {
                 </Text>
                 <Text>Description: {item.description}</Text>
 
-                <Button onClick={() => onToggleTask(item._id)}>
+                <Button 
+                  disabled={!task.username.length = 0}
+                  onClick={() => onToggleTask(item._id)}>
                   TAKE TASK
                 </Button>
               </Box>
