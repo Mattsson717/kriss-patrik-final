@@ -87,7 +87,6 @@ const Header = () => {
                     </Center>
                     <br />
                     <MenuDivider />
-                    <MenuItem>Account Settings</MenuItem>
                     <MenuItem onClick={() => onButtonClick()}>Logout</MenuItem>
                   </MenuList>
                 </Menu>

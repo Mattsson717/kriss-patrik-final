@@ -144,7 +144,9 @@ app.get("/tasks/:userId", async (req, res) => {
   const { userId } = req.params;
 
   try {
-    const tasks = await Task.find({ user: userId }).populate("user");
+    const tasks = await Task.find({ user: userId })
+      .populate("user")
+      .sort({ createdAt: "desc" });
     res.status(201).json({ response: tasks, success: true });
   } catch (error) {
     res.status(400).json({ response: error, success: false });
@@ -156,9 +158,9 @@ app.get("/groups/user/:userId", async (req, res) => {
   const { userId } = req.params;
 
   try {
-    const queriedGroup = await Group.find({ user: { $in: [userId] } }).populate(
-      "group"
-    );
+    const queriedGroup = await Group.find({ user: { $in: [userId] } })
+      .populate("group")
+      .sort({ createdAt: "desc" });
     if (queriedGroup) {
       res.status(200).json({ response: queriedGroup, success: true });
     } else {
@@ -175,6 +177,7 @@ app.get("/tasks/group/:groupId", async (req, res) => {
 
   try {
     const queriedGroup = await Group.findById(groupId).populate("task");
+
     if (queriedGroup) {
       res.status(200).json({ response: queriedGroup.task, success: true });
     } else {
@@ -347,23 +350,6 @@ app.patch("/tasks/:taskId", async (req, res) => {
     res.status(400).json({ response: error, success: false });
   }
 });
-
-// Is TAKEN --- WORKS!
-// app.patch("/tasks/:taskId/taken", async (req, res) => {
-//   const { taskId } = req.params;
-//   const { taken } = req.body;
-
-//   try {
-//     const updatedTaken = await Task.findOneAndUpdate(
-//       { _id: taskId },
-//       { taken },
-//       { new: true }
-//     );
-//     res.status(200).json({ response: updatedTaken, success: true });
-//   } catch (error) {
-//     res.status(400).json({ response: error, success: false });
-//   }
-// });
 
 // Patch Group by Id --- WORKS!
 app.patch("/group/:groupId", async (req, res) => {

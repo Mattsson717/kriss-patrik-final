@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useSelector, useDispatch, batch } from "react-redux";
 
 import { API_URL } from "../../utils/constants";
-import { group } from "../../reducers/group"; // import user from "../../reducers/user";
+import { group } from "../../reducers/group";
 
 import {
   Modal,
@@ -18,13 +18,13 @@ import {
 } from "@chakra-ui/react";
 
 const AddMember = ({ isOpen, onClose }) => {
-  const [username, setUsername] = useState("");
+  const [userId, setUserId] = useState("");
   const [error, setError] = useState(false);
-
-  const groupId = useSelector((store) => store.group.groupId);
 
   const dispatch = useDispatch();
   const toast = useToast();
+
+  const groupId = useSelector((store) => store.group.groupId);
 
   const onFormSubmit = (event) => {
     event.preventDefault();
@@ -35,7 +35,7 @@ const AddMember = ({ isOpen, onClose }) => {
         "Content-Type": "application/json",
       },
     };
-    fetch(API_URL(`user/${username}/groups/${groupId}`), options)
+    fetch(API_URL(`user/${userId}/groups/${groupId}`), options)
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
@@ -80,9 +80,8 @@ const AddMember = ({ isOpen, onClose }) => {
                   mb={3}
                   type="text"
                   id="addMember"
-                  required
-                  value={username}
-                  onChange={(event) => setUsername(event.target.value)}
+                  value={userId}
+                  onChange={(event) => setUserId(event.target.value)}
                 />
 
                 <button type="submit" onClick={!error ? "" : onClose}>

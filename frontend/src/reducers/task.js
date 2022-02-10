@@ -4,8 +4,6 @@ export const task = createSlice({
   name: "task",
   initialState: {
     items: [],
-    // title: null,
-    // description: null,
     error: null,
     // createdAt: new Date(),
   },
@@ -14,7 +12,7 @@ export const task = createSlice({
       store.items = action.payload;
     },
     setTaskId: (store, action) => {
-      store.taskId = action.payload;
+      store.items = action.payload;
     },
     // deleteTask: (store, action) => {
     //   store.items = store.items.filter((item) => item._id !== action.payload);

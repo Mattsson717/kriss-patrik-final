@@ -96,9 +96,11 @@ const AddTask = ({ isOpen, onClose }) => {
                   value={description}
                   onChange={(event) => setDescription(event.target.value)}
                 />
+                {/* Doesn't close when clicked */}
                 <button type="submit" onClick={!error ? "" : onClose}>
                   add task
                 </button>
+                <button onClick={onClose}>Close</button>
               </form>
             </Box>
           </ModalBody>

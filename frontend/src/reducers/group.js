@@ -6,7 +6,6 @@ export const group = createSlice({
     items: [],
     taskId: null,
     title: [],
-    // description: [],  ???
     groupId: null,
     error: null,
   },

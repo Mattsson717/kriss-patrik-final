@@ -12,7 +12,6 @@ import CreateGroup from "./components/pages/CreateGroup";
 import MyGroups from "./components/pages/MyGroups";
 import MyTasks from "./components/pages/MyTasks";
 import Group from "./components/pages/Group";
-import Header from "./components/Header";
 
 import user from "./reducers/user";
 import { group } from "./reducers/group";
@@ -32,9 +31,7 @@ export const App = () => {
       <ChakraProvider>
         <ColorModeScript initialColorMode="light"></ColorModeScript>
         <BrowserRouter>
-          {/* <Header /> */}
           <Routes>
-            {/* (path="/" ? : <Header />) */}
             <Route path="/" element={<Start />} />
             <Route path="/login" element={<Login />} />
             <Route path="/home" element={<Home />} />

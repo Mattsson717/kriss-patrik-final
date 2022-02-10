@@ -115,7 +115,7 @@ const Edit = ({ isOpen, onClose }) => {
                     })
                   }
                 />
-                {/* DELETE */}
+                {/* DELETE TASK BUTTON */}
 
                 <Box m={4}>
                   <Button type="submit" onClick={!error ? "" : onClose}>

@@ -64,6 +64,7 @@ const Group = () => {
     fetch(API_URL(`tasks/group/${groupId}`), options)
       .then((res) => res.json())
       .then((data) => {
+        console.log("DATA:", data);
         if (data.success) {
           dispatch(group.actions.setItems(data.response));
           dispatch(group.actions.setError(null));
@@ -73,7 +74,7 @@ const Group = () => {
       });
   }, [dispatch, accessToken, groupId]);
 
-  const onToggleTask = (taskId) => {
+  const onTakenTask = (taskId) => {
     const options = {
       method: "PATCH",
       body: JSON.stringify({
@@ -88,7 +89,7 @@ const Group = () => {
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
-          dispatch(task.actions.setItems(taskId));
+          dispatch(task.actions.setItems(data.response));
           dispatch(task.actions.setTaskId(data.response));
           dispatch(task.actions.setError(null));
           toast({
@@ -162,9 +163,9 @@ const Group = () => {
                 <Text>Description: {item.description}</Text>
 
                 <Button
-                  // disabled={!taskSchema.user.length = 0}
-                  onClick={() => onToggleTask(item._id)}>
-                  {/* change name onToggleTask */}
+                  disabled={!item.user >= 1 ? false : true}
+                  onClick={() => onTakenTask(item._id)}
+                >
                   TAKE TASK
                 </Button>
               </Box>

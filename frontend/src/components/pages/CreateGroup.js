@@ -101,21 +101,8 @@ const CreateGroup = ({ isOpen, onClose }) => {
                   value={description}
                   onChange={(event) => setDescription(event.target.value)}
                 />
-                {/* <FormLabel htmlFor="tasks" />
-                <Input
-                  variant="filled"
-                  mb={3}
-                  type="text"
-                  id="tasks"
-                  placeholder="Add task (you can add tasks later)"
-                  value={task}
-                  onChange={(event) => setTask(event.target.value)}
-                />
-                <button>+</button> */}
-
                 <Box m={4}>
-                  {/* Disable button if input fields are empty */}
-                  <Button type="submit" onClick={onClose}>
+                  <Button type="submit" onClick={!error ? "" : onClose}>
                     Create new group
                   </Button>
                   <Button onClick={onClose}>Close</Button>
