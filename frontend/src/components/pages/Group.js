@@ -1,7 +1,5 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { API_URL } from "../../utils/constants";
-import { ui } from "../../reducers/ui";
 
 import {
   Flex,
@@ -17,6 +15,8 @@ import Edit from "../modals/Edit";
 import AddTask from "../modals/AddTask";
 import AddMember from "../modals/AddMember";
 import Header from "../Header";
+import { API_URL } from "../../utils/constants";
+import { ui } from "../../reducers/ui";
 import { group } from "../../reducers/group";
 import { task } from "../../reducers/task";
 
