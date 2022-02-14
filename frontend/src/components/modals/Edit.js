@@ -109,7 +109,6 @@ const Edit = ({ isOpen, onClose }) => {
                   id="description"
                   placeholder="description"
                   defaultValue={taskInfo.description}
-                  required
                   onChange={(event) =>
                     setTaskInfo({
                       ...taskInfo,
