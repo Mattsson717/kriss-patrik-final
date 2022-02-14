@@ -64,7 +64,6 @@ const Group = () => {
     fetch(API_URL(`tasks/group/${groupId}`), options)
       .then((res) => res.json())
       .then((data) => {
-        console.log("DATA:", data);
         if (data.success) {
           dispatch(group.actions.setItems(data.response));
           dispatch(group.actions.setError(null));

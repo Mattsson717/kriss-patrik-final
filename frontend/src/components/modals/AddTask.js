@@ -77,7 +77,7 @@ const AddTask = ({ isOpen, onClose }) => {
           <ModalBody>
             <Box>
               <form onSubmit={(event) => onFormSubmit(event)}>
-                <FormLabel htmlFor="addTask">Fill in task</FormLabel>
+                <FormLabel htmlFor="addTask">Fill in task:</FormLabel>
                 <Input
                   placeholder="title"
                   variant="filled"

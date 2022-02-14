@@ -5,7 +5,7 @@ import crypto from "crypto";
 import bcrypt from "bcrypt";
 
 //setting up local database
-const mongoUrl = process.env.MONGO_URL || "mongodb://localhost/final";
+const mongoUrl = process.env.MONGO_URL || "MONGO_URL";
 mongoose.connect(mongoUrl, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
