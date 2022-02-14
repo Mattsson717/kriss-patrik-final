@@ -116,12 +116,10 @@ const Group = () => {
     <>
       <Header />
       <Flex
-        maxW="1000px"
-        w={["90vw", "90vw", "70vw", "70vw"]}
-        direction={["column", "column", "row", "row"]}
-        justify="center"
-        p={4}
-        alignItems="start"
+        height="vh100"
+        alignItems="center"
+        justifyContent="center"
+        direction={"column"}
       >
         <Box direction="row" justifyContent="center">
           <Button
@@ -150,7 +148,6 @@ const Group = () => {
           <Flex justify="center" align="center" mx="2" key={item._id}>
             <Box
               maxW="1000px"
-              w={["90%", "90%", "70%", "70%"]}
               direction={["column", "column", "row", "row"]}
               justify="center"
               boxShadow="md"
@@ -170,7 +167,7 @@ const Group = () => {
               <Box
                 direction={"column"}
                 wordBreak={"break-word"}
-                w={["60vw", "60vw", "50vw", "50vw"]}
+                w={["260px", "350px", "400px", "450px"]}
               >
                 <Text m="2" p={5} fontWeight="bold">
                   {item.title}

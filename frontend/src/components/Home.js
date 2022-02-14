@@ -36,25 +36,25 @@ const Home = () => {
   return (
     <>
       <Header />
-      <Flex
-        as="section"
-        d="flex"
-        justifyContent="center"
-        alignItems="start"
-        h="100vh"
-        m={5}
-        maxW="500vw"
-        w={["90vw", "90vw", "70vw", "70vw"]}
-      >
-        <Flex justify="center" align="center" mx="2">
+      <Flex height="vh100" alignItems="center" justifyContent="center">
+        <Flex
+          textAlign="center"
+          py={10}
+          px={6}
+          rounded={"lg"}
+          bg={useColorModeValue("white", "gray.700")}
+          boxShadow={"lg"}
+          width={600}
+          justifyContent="center"
+          alignItems="center"
+        >
           <Box
-            w={["100%", "95%", "70%", "70%"]}
-            justifyContent="center"
-            alignItems="center"
-            rounded={"lg"}
-            bg={useColorModeValue("white", "gray.700")}
-            boxShadow={"lg"}
-            p={8}
+          // w={["100%", "95%", "70%", "70%"]}
+
+          // rounded={"lg"}
+          // bg={useColorModeValue("white", "gray.700")}
+          // boxShadow={"lg"}
+          // p={8}
           >
             <h2>Hello {loggedInUser}!</h2>
             <Box>
@@ -65,7 +65,7 @@ const Home = () => {
             <ButtonGroup
               spacing="4"
               flexDirection={["column", "column", "row", "row"]}
-              alignSelf={"center"}
+              // alignSelf={"center"}
             >
               <Button
                 m={3}

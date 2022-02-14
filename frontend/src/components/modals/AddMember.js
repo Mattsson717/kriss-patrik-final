@@ -15,6 +15,7 @@ import {
   FormLabel,
   Box,
   useToast,
+  Button,
 } from "@chakra-ui/react";
 
 const AddMember = ({ isOpen, onClose }) => {
@@ -69,12 +70,12 @@ const AddMember = ({ isOpen, onClose }) => {
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>ADD Member</ModalHeader>
+          <ModalHeader>Add member</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Box>
               <form onSubmit={(event) => onFormSubmit(event)}>
-                <FormLabel htmlFor="addMember">Add Member</FormLabel>
+                <FormLabel htmlFor="addMember">Fill in memberId:</FormLabel>
                 <Input
                   placeholder="title"
                   variant="filled"
@@ -85,9 +86,9 @@ const AddMember = ({ isOpen, onClose }) => {
                   onChange={(event) => setUserId(event.target.value)}
                 />
 
-                <button type="submit" onClick={!error ? "" : onClose}>
-                  add member
-                </button>
+                <Button type="submit" onClick={!error ? "" : onClose}>
+                  Add member
+                </Button>
               </form>
             </Box>
           </ModalBody>

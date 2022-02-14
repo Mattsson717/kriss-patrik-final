@@ -72,12 +72,12 @@ const AddTask = ({ isOpen, onClose }) => {
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>ADD Task</ModalHeader>
+          <ModalHeader>Add task</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Box>
               <form onSubmit={(event) => onFormSubmit(event)}>
-                <FormLabel htmlFor="addTask">Add Task</FormLabel>
+                <FormLabel htmlFor="addTask">Fill in task</FormLabel>
                 <Input
                   placeholder="title"
                   variant="filled"
@@ -99,7 +99,7 @@ const AddTask = ({ isOpen, onClose }) => {
                 />
 
                 <Button type="submit" onClick={!error ? "" : onClose}>
-                  add task
+                  Add task
                 </Button>
                 <Button onClick={onClose}>Close</Button>
               </form>
