@@ -3,6 +3,7 @@ import { useSelector, useDispatch, batch } from "react-redux";
 
 import { API_URL } from "../../utils/constants";
 import { group } from "../../reducers/group";
+import { ui } from "../../reducers/ui";
 
 import {
   Modal,
@@ -34,6 +35,7 @@ const CreateGroup = ({ isOpen, onClose }) => {
     event.preventDefault();
 
     // CREATE GROUP and attach logged in USER
+    dispatch(ui.actions.setLoading(true));
     const optionsPost = {
       method: "POST",
       headers: {
@@ -68,7 +70,8 @@ const CreateGroup = ({ isOpen, onClose }) => {
           });
           setError(true);
         }
-      });
+      })
+      .finally(dispatch(ui.actions.setLoading(false)));
   };
 
   return (

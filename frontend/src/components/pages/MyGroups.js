@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { API_URL } from "../../utils/constants";
 import { Flex, Box, Text, Image, Link, Divider } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
+import { ui } from "../../reducers/ui";
 
 import { group } from "../../reducers/group";
 import Header from "../Header";
@@ -13,11 +14,14 @@ const MyGroups = () => {
   const accessToken = useSelector((store) => store.user.accessToken);
   const loggedInUser = useSelector((store) => store.user.username);
 
+  //  const [loading, setLoading] = useState(false);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   // Shows the logged in users GROUPS
   useEffect(() => {
+    dispatch(ui.actions.setLoading(true));
     const options = {
       method: "GET",
       headers: {
@@ -37,7 +41,8 @@ const MyGroups = () => {
           dispatch(group.actions.setGroupId([]));
           dispatch(group.actions.setError(data.response));
         }
-      });
+      })
+      .finally(dispatch(ui.actions.setLoading(false)));
   }, [dispatch, accessToken, userId]);
 
   // Opens the specific GROUP

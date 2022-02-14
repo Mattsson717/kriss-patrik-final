@@ -15,6 +15,7 @@ import { useNavigate } from "react-router-dom";
 
 import { API_URL } from "../utils/constants";
 import user from "../reducers/user";
+import { ui } from "../../reducers/ui";
 
 const Login = () => {
   const errorMess = useSelector((store) => store.user.error);
@@ -39,6 +40,7 @@ const Login = () => {
     event.preventDefault();
 
     // Log in/signup
+    dispatch(ui.actions.setLoading(true));
     const options = {
       method: "POST",
       headers: {
@@ -78,7 +80,8 @@ const Login = () => {
           });
           setError(true);
         }
-      });
+      })
+      .finally(dispatch(ui.actions.setLoading(false)));
   };
 
   return (

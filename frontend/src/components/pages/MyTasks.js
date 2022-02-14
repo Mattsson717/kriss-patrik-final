@@ -4,6 +4,7 @@ import { API_URL } from "../../utils/constants";
 import { group } from "../../reducers/group";
 import { Flex, Box, Text, Image } from "@chakra-ui/react";
 import Header from "../Header";
+import { ui } from "../../reducers/ui";
 
 const MyTasks = () => {
   const dispatch = useDispatch();
@@ -14,6 +15,7 @@ const MyTasks = () => {
 
   // Shows the logged in users TASKS
   useEffect(() => {
+    dispatch(ui.actions.setLoading(true));
     const options = {
       method: "GET",
       headers: {
@@ -30,7 +32,8 @@ const MyTasks = () => {
           dispatch(group.actions.setItems([]));
           dispatch(group.actions.setError(data.response));
         }
-      });
+      })
+      .finally(dispatch(ui.actions.setLoading(false)));
   }, [dispatch, accessToken, userId]);
 
   // If the logged in user doesnt have any tasks, show this:

@@ -48,14 +48,7 @@ const Home = () => {
           justifyContent="center"
           alignItems="center"
         >
-          <Box
-          // w={["100%", "95%", "70%", "70%"]}
-
-          // rounded={"lg"}
-          // bg={useColorModeValue("white", "gray.700")}
-          // boxShadow={"lg"}
-          // p={8}
-          >
+          <Box>
             <h2>Hello {loggedInUser}!</h2>
             <Box>
               <Heading as="h1" fontSize="3xl" fontWeight="semi" color="teal">

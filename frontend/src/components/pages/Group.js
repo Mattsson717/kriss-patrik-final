@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { API_URL } from "../../utils/constants";
+import { ui } from "../../reducers/ui";
 
 import {
   Flex,
@@ -55,6 +56,7 @@ const Group = () => {
 
   //fetch TASKS by groupId
   useEffect(() => {
+    dispatch(ui.actions.setLoading(true));
     const options = {
       method: "GET",
       headers: {
@@ -70,11 +72,13 @@ const Group = () => {
         } else {
           dispatch(group.actions.setError(data.response));
         }
-      });
+      })
+      .finally(dispatch(ui.actions.setLoading(false)));
   }, [dispatch, accessToken, groupId]);
 
   // Accept the TASK and send it to the logged in users MY TASKs
   const onTakenTask = (taskId) => {
+    dispatch(ui.actions.setLoading(true));
     const options = {
       method: "PATCH",
       body: JSON.stringify({
@@ -108,7 +112,8 @@ const Group = () => {
             isClosable: true,
           });
         }
-      });
+      })
+      .finally(dispatch(ui.actions.setLoading(false)));
   };
 
   return (
