@@ -19,6 +19,17 @@ export const group = createSlice({
     setGroupId: (store, action) => {
       store.groupId = action.payload;
     },
+    editTask: (store, action) => {
+      const editTasks = store.items.map((item) => {
+        if (item._id === action.payload._id) {
+          item = action.payload;
+          return item;
+        } else {
+          return item;
+        }
+      });
+      store.items = editTasks;
+    },
     setUserId: (store, action) => {
       store.items = action.payload;
     },

@@ -55,6 +55,7 @@ const Edit = ({ isOpen, onClose }) => {
           batch(() => {
             dispatch(group.actions.setItems(data.response));
             dispatch(group.actions.setDescription(data.response));
+            dispatch(group.actions.editTask(data.response));
             toast({
               title: "Task succesfully edited.",
               status: "success",

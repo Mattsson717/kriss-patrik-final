@@ -14,8 +14,6 @@ const MyGroups = () => {
   const accessToken = useSelector((store) => store.user.accessToken);
   const loggedInUser = useSelector((store) => store.user.username);
 
-  //  const [loading, setLoading] = useState(false);
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
