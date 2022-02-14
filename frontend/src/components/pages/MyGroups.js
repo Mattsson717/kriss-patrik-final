@@ -32,6 +32,7 @@ const MyGroups = () => {
       .then((data) => {
         if (data.success) {
           dispatch(group.actions.setItems(data.response));
+          dispatch(group.actions.setTitle(data.response));
           dispatch(group.actions.setGroupId(data.response));
           dispatch(group.actions.setError(null));
         } else {

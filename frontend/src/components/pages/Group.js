@@ -24,6 +24,7 @@ const Group = () => {
   const dispatch = useDispatch();
 
   const groupItems = useSelector((store) => store.group.items);
+  const groupTitle = useSelector((store) => store.group.title);
 
   const userId = useSelector((store) => store.user.userId);
   const groupId = useSelector((store) => store.group.groupId);
@@ -68,6 +69,7 @@ const Group = () => {
       .then((data) => {
         if (data.success) {
           dispatch(group.actions.setItems(data.response));
+          dispatch(group.actions.setTitle(data.response));
           dispatch(group.actions.setError(null));
         } else {
           dispatch(group.actions.setError(data.response));
@@ -147,7 +149,8 @@ const Group = () => {
           </Button>
           <AddMember isOpen={isOpenMember} onClose={onCloseMember} />
         </Box>
-
+        <Text>Group: {groupTitle.title}</Text>
+        {console.log("GroupItems:", groupTitle)}
         {groupItems.map((item) => (
           <Flex justify="center" align="center" mx="2" key={item._id}>
             <Box

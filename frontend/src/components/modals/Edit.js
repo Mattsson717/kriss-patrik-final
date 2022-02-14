@@ -53,7 +53,8 @@ const Edit = ({ isOpen, onClose }) => {
       .then((data) => {
         if (data.success) {
           batch(() => {
-            dispatch(group.actions.setItems(data.response));
+            // dispatch(group.actions.setItems(data.response));
+            dispatch(group.actions.setTitle(data.response));
             dispatch(group.actions.setDescription(data.response));
             dispatch(group.actions.editTask(data.response));
             toast({
@@ -62,6 +63,8 @@ const Edit = ({ isOpen, onClose }) => {
               duration: 5000,
               isClosable: true,
             });
+            dispatch(group.actions.setTitle(null));
+            dispatch(group.actions.setDescription(null));
             dispatch(group.actions.setError(null));
           });
         } else {
