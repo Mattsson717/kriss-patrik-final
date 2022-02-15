@@ -20,7 +20,6 @@ import {
 } from "@chakra-ui/react";
 
 const Edit = ({ isOpen, onClose }) => {
-  const errorMess = useSelector((store) => store.group.error);
   const taskId = useSelector((store) => store.group.taskId);
   const title = useSelector((store) => store.group.title);
   const description = useSelector((store) => store.group.description);
@@ -51,22 +50,18 @@ const Edit = ({ isOpen, onClose }) => {
     fetch(API_URL(`tasks/${taskId}`), options)
       .then((res) => res.json())
       .then((data) => {
-        if (data.success) {
-          batch(() => {
-            // dispatch(group.actions.setItems(data.response));
-            dispatch(group.actions.setTitle(data.response));
-            dispatch(group.actions.setDescription(data.response));
-            dispatch(group.actions.editTask(data.response));
-            toast({
-              title: "Task succesfully edited.",
-              status: "success",
-              duration: 5000,
-              isClosable: true,
-            });
-            dispatch(group.actions.setTitle(null));
-            dispatch(group.actions.setDescription(null));
-            dispatch(group.actions.setError(null));
+        if (data) {
+          dispatch(group.actions.editTask(data));
+          // dispatch(group.actions.setTitle(data.response));
+          // dispatch(group.actions.setDescription(data.response));
+          dispatch(group.actions.setError(null));
+          toast({
+            title: "Task succesfully edited.",
+            status: "success",
+            duration: 5000,
+            isClosable: true,
           });
+          // });
         } else {
           batch(() => {
             dispatch(group.actions.setError(data.response));
@@ -128,8 +123,6 @@ const Edit = ({ isOpen, onClose }) => {
                   <Button onClick={onClose}>Close</Button>
                 </Box>
               </form>
-
-              {error && <p>{errorMess}</p>}
             </Box>
           </ModalBody>
         </ModalContent>

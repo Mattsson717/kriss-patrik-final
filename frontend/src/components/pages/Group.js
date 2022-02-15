@@ -69,7 +69,7 @@ const Group = () => {
       .then((data) => {
         if (data.success) {
           dispatch(group.actions.setItems(data.response));
-          dispatch(group.actions.setTitle(data.response));
+          // dispatch(group.actions.setTitle(data.response));
           dispatch(group.actions.setError(null));
         } else {
           dispatch(group.actions.setError(data.response));
@@ -95,7 +95,7 @@ const Group = () => {
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
-          dispatch(task.actions.setItems(data.response));
+          dispatch(task.actions.setItems(data));
           dispatch(task.actions.setTaskId(data.response));
           dispatch(task.actions.setError(null));
           toast({
@@ -149,8 +149,8 @@ const Group = () => {
           </Button>
           <AddMember isOpen={isOpenMember} onClose={onCloseMember} />
         </Box>
-        <Text>Group: {groupTitle.title}</Text>
-        {console.log("GroupItems:", groupTitle)}
+        {/* <Text>Group: {groupTitle.title}</Text> */}
+        {/* {console.log("GroupItems:", groupTitle)} */}
         {groupItems.map((item) => (
           <Flex justify="center" align="center" mx="2" key={item._id}>
             <Box

@@ -35,10 +35,10 @@ export const group = createSlice({
       store.items = action.payload;
     },
     setTitle: (store, action) => {
-      store.title = action.payload;
+      store.items = action.payload;
     },
     setDescription: (store, action) => {
-      store.description = action.payload;
+      store.items = action.payload;
     },
     setNewGroup: (store, action) => {
       store.items = [action.payload, ...store.items];
