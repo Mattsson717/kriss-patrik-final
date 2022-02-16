@@ -24,7 +24,7 @@ const Group = () => {
   const dispatch = useDispatch();
 
   const groupItems = useSelector((store) => store.group.items);
-  const groupTitle = useSelector((store) => store.group.title);
+  // const groupTitle = useSelector((store) => store.group.title);
 
   const userId = useSelector((store) => store.user.userId);
   const groupId = useSelector((store) => store.group.groupId);
