@@ -5,7 +5,9 @@ import crypto from 'crypto';
 import bcrypt from 'bcrypt';
 
 //setting up local database
-const mongoUrl = process.env.MONGO_URL || 'https://givers-game.onrender.com';
+const mongoUrl =
+  process.env.MONGO_URL ||
+  'mongodb+srv://Mattsson717:<Mcclane89>@mattssonscluster.fz9jx.mongodb.net/?retryWrites=true&w=majority';
 mongoose.connect(mongoUrl, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
