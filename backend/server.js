@@ -1,12 +1,11 @@
-import express from "express";
-import cors from "cors";
-import mongoose from "mongoose";
-import crypto from "crypto";
-import bcrypt from "bcrypt";
+import express from 'express';
+import cors from 'cors';
+import mongoose from 'mongoose';
+import crypto from 'crypto';
+import bcrypt from 'bcrypt';
 
 //setting up local database
-const mongoUrl =
-  process.env.MONGO_URL || "https://kriss-patrik-final-project.herokuapp.com/";
+const mongoUrl = process.env.MONGO_URL || 'https://givers-game.onrender.com';
 mongoose.connect(mongoUrl, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -34,15 +33,15 @@ const UserSchema = new mongoose.Schema({
   },
   task: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "task",
+    ref: 'task',
   },
 
   accessToken: {
     type: String,
-    default: () => crypto.randomBytes(128).toString("hex"),
+    default: () => crypto.randomBytes(128).toString('hex'),
   },
 });
-const User = mongoose.model("User", UserSchema);
+const User = mongoose.model('User', UserSchema);
 
 // Model to create new group
 const GroupSchema = new mongoose.Schema({
@@ -57,17 +56,17 @@ const GroupSchema = new mongoose.Schema({
   task: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Task",
+      ref: 'Task',
     },
   ],
   user: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
     },
   ],
 });
-const Group = mongoose.model("Group", GroupSchema);
+const Group = mongoose.model('Group', GroupSchema);
 
 // Model to create task
 const TaskSchema = new mongoose.Schema({
@@ -81,7 +80,7 @@ const TaskSchema = new mongoose.Schema({
   },
   group: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Group",
+    ref: 'Group',
   },
   taken: {
     type: Boolean,
@@ -89,17 +88,17 @@ const TaskSchema = new mongoose.Schema({
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+    ref: 'User',
   },
   createdAt: {
     type: Date,
     default: Date.now,
   },
 });
-const Task = mongoose.model("Task", TaskSchema);
+const Task = mongoose.model('Task', TaskSchema);
 
 // ******** Defined Port ******** //
-const port = process.env.PORT || 9000;
+const port = process.env.PORT || 8080;
 const app = express();
 
 // ******** Middlewear ******** //
@@ -108,7 +107,7 @@ app.use(express.json());
 
 // ******** Authentication function ******** //.
 const authenticateUser = async (req, res, next) => {
-  const accessToken = req.header("Authorization");
+  const accessToken = req.header('Authorization');
 
   try {
     const user = await User.findOne({ accessToken });
@@ -117,7 +116,7 @@ const authenticateUser = async (req, res, next) => {
     } else {
       res.status(401).json({
         response: {
-          message: "Please, log in",
+          message: 'Please, log in',
         },
         success: false,
       });
@@ -129,24 +128,24 @@ const authenticateUser = async (req, res, next) => {
 
 // ******** ENDPOINTS ******** //
 // GET endpoints
-app.get("/", (req, res) => {
-  res.send("Start");
+app.get('/', (req, res) => {
+  res.send('Start');
 });
 
-app.get("/home", authenticateUser);
-app.get("/home", async (req, res) => {
-  res.send("Home");
+app.get('/home', authenticateUser);
+app.get('/home', async (req, res) => {
+  res.send('Home');
 });
 
 // Get all tasks by USER ID --- WORKS!
-app.get("/tasks/:userId", authenticateUser);
-app.get("/tasks/:userId", async (req, res) => {
+app.get('/tasks/:userId', authenticateUser);
+app.get('/tasks/:userId', async (req, res) => {
   const { userId } = req.params;
 
   try {
     const tasks = await Task.find({ user: userId })
-      .populate("user")
-      .sort({ createdAt: "desc" });
+      .populate('user')
+      .sort({ createdAt: 'desc' });
     res.status(201).json({ response: tasks, success: true });
   } catch (error) {
     res.status(400).json({ response: error, success: false });
@@ -154,17 +153,17 @@ app.get("/tasks/:userId", async (req, res) => {
 });
 
 // GET GROUPS by USER ID --- WORKS!
-app.get("/groups/user/:userId", async (req, res) => {
+app.get('/groups/user/:userId', async (req, res) => {
   const { userId } = req.params;
 
   try {
     const queriedGroup = await Group.find({ user: { $in: [userId] } })
-      .populate("group")
-      .sort({ createdAt: "desc" });
+      .populate('group')
+      .sort({ createdAt: 'desc' });
     if (queriedGroup) {
       res.status(200).json({ response: queriedGroup, success: true });
     } else {
-      res.status(404).json({ response: "User not found", success: false });
+      res.status(404).json({ response: 'User not found', success: false });
     }
   } catch (error) {
     res.status(400).json({ response: error, success: false });
@@ -172,16 +171,16 @@ app.get("/groups/user/:userId", async (req, res) => {
 });
 
 // GET TASKS by GROUP ID --- WORKS!
-app.get("/tasks/group/:groupId", async (req, res) => {
+app.get('/tasks/group/:groupId', async (req, res) => {
   const { groupId } = req.params;
 
   try {
-    const queriedGroup = await Group.findById(groupId).populate("task");
+    const queriedGroup = await Group.findById(groupId).populate('task');
 
     if (queriedGroup) {
       res.status(200).json({ response: queriedGroup.task, success: true });
     } else {
-      res.status(404).json({ response: "User not found", success: false });
+      res.status(404).json({ response: 'User not found', success: false });
     }
   } catch (error) {
     res.status(400).json({ response: error, success: false });
@@ -190,7 +189,7 @@ app.get("/tasks/group/:groupId", async (req, res) => {
 
 // POST endpoints
 // Create new GROUP AND attatch the logged in USER to that GROUP --- WORKS!
-app.post("/group/user/:userId", async (req, res) => {
+app.post('/group/user/:userId', async (req, res) => {
   const { title, description } = req.body;
   const { userId } = req.params;
 
@@ -209,7 +208,7 @@ app.post("/group/user/:userId", async (req, res) => {
 });
 
 // Create new TASK and push it into the GROUP --- WORKS!
-app.post("/task/group/:groupId", async (req, res) => {
+app.post('/task/group/:groupId', async (req, res) => {
   const { title, description } = req.body;
   const { groupId } = req.params;
 
@@ -229,26 +228,26 @@ app.post("/task/group/:groupId", async (req, res) => {
             },
           },
           { new: true }
-        ).populate("task");
+        ).populate('task');
         res.status(200).json({ response: updatedGroup.task, success: true });
       }
     } else {
-      res.status(404).json({ response: "Group not found", success: false });
+      res.status(404).json({ response: 'Group not found', success: false });
     }
   } catch (error) {
-    res.status(400).json({ response: "Title aldready exist", success: false });
+    res.status(400).json({ response: 'Title aldready exist', success: false });
   }
 });
 
 // SIGNUP endpoint --- WORKS!
-app.post("/signup", async (req, res) => {
+app.post('/signup', async (req, res) => {
   const { username, password, email } = req.body;
 
   try {
     const salt = bcrypt.genSaltSync();
 
     if (password.length < 5) {
-      throw "Password must be at least 5 characters long";
+      throw 'Password must be at least 5 characters long';
     }
 
     const newUser = await new User({
@@ -272,7 +271,7 @@ app.post("/signup", async (req, res) => {
 });
 
 // SIGNIN endpoint --- WORKS!
-app.post("/signin", async (req, res) => {
+app.post('/signin', async (req, res) => {
   const { username, password } = req.body;
 
   try {
@@ -301,7 +300,7 @@ app.post("/signin", async (req, res) => {
 
 // DELETE endpoints
 // Delete Task by Id --- WORKS!
-app.delete("/tasks/:taskId", async (req, res) => {
+app.delete('/tasks/:taskId', async (req, res) => {
   const { taskId } = req.params;
 
   try {
@@ -309,7 +308,7 @@ app.delete("/tasks/:taskId", async (req, res) => {
     if (deletedTask) {
       res.status(200).json(deletedTask);
     } else {
-      res.status(404).json({ response: "Task not found", success: false });
+      res.status(404).json({ response: 'Task not found', success: false });
     }
   } catch (error) {
     res.status(400).json({ response: error, success: false });
@@ -317,7 +316,7 @@ app.delete("/tasks/:taskId", async (req, res) => {
 });
 
 // Delete Group by Id --- WORKS!
-app.delete("/groups/:groupId", async (req, res) => {
+app.delete('/groups/:groupId', async (req, res) => {
   const { groupId } = req.params;
 
   try {
@@ -325,7 +324,7 @@ app.delete("/groups/:groupId", async (req, res) => {
     if (deletedGroup) {
       res.status(200).json(deletedGroup);
     } else {
-      res.status(404).json({ response: "Group not found", success: false });
+      res.status(404).json({ response: 'Group not found', success: false });
     }
   } catch (error) {
     res.status(400).json({ response: error, success: false });
@@ -334,7 +333,7 @@ app.delete("/groups/:groupId", async (req, res) => {
 
 // PATCH endpoints
 // Patch Task by Id --- WORKS!
-app.patch("/tasks/:taskId", async (req, res) => {
+app.patch('/tasks/:taskId', async (req, res) => {
   const { taskId } = req.params;
 
   try {
@@ -344,7 +343,7 @@ app.patch("/tasks/:taskId", async (req, res) => {
     if (updatedTask) {
       res.json(updatedTask);
     } else {
-      res.status(404).json({ response: "Thought not found", success: false });
+      res.status(404).json({ response: 'Thought not found', success: false });
     }
   } catch (error) {
     res.status(400).json({ response: error, success: false });
@@ -352,7 +351,7 @@ app.patch("/tasks/:taskId", async (req, res) => {
 });
 
 // Patch Group by Id --- WORKS!
-app.patch("/group/:groupId", async (req, res) => {
+app.patch('/group/:groupId', async (req, res) => {
   const { groupId } = req.params;
 
   try {
@@ -362,7 +361,7 @@ app.patch("/group/:groupId", async (req, res) => {
     if (updatedGroup) {
       res.json(updatedGroup);
     } else {
-      res.status(404).json({ response: "Group not found", success: false });
+      res.status(404).json({ response: 'Group not found', success: false });
     }
   } catch (error) {
     res.status(400).json({ response: error, success: false });
@@ -370,7 +369,7 @@ app.patch("/group/:groupId", async (req, res) => {
 });
 
 // Attach USER to GROUPS --- WORKS!
-app.patch("/user/:userId/groups/:groupId", async (req, res) => {
+app.patch('/user/:userId/groups/:groupId', async (req, res) => {
   const { userId, groupId } = req.params;
 
   try {
@@ -391,10 +390,10 @@ app.patch("/user/:userId/groups/:groupId", async (req, res) => {
 
         res.status(200).json({ response: updatedGroup, success: true });
       } else {
-        res.status(404).json({ response: "User not found", success: false });
+        res.status(404).json({ response: 'User not found', success: false });
       }
     } else {
-      res.status(404).json({ response: "Group not found", success: false });
+      res.status(404).json({ response: 'Group not found', success: false });
     }
   } catch (error) {
     res.status(400).json({ response: error, success: false });
@@ -402,7 +401,7 @@ app.patch("/user/:userId/groups/:groupId", async (req, res) => {
 });
 
 // Attach USER to TASKS --- WORKS!
-app.patch("/user/:userId/tasks/:taskId", async (req, res) => {
+app.patch('/user/:userId/tasks/:taskId', async (req, res) => {
   const { userId, taskId } = req.params;
 
   try {
@@ -420,14 +419,14 @@ app.patch("/user/:userId/tasks/:taskId", async (req, res) => {
             },
           },
           { new: true }
-        ).populate("user");
+        ).populate('user');
 
         res.status(200).json({ response: updatedTask, success: true });
       } else {
-        res.status(404).json({ response: "User not found", success: false });
+        res.status(404).json({ response: 'User not found', success: false });
       }
     } else {
-      res.status(404).json({ response: "Task not found", success: false });
+      res.status(404).json({ response: 'Task not found', success: false });
     }
   } catch (error) {
     res.status(400).json({ response: error, success: false });
