@@ -3,5 +3,6 @@
   "version": "1.0.0",
   "scripts": {
     "postinstall": "npm install --prefix backend"
+    "build": "webpack --config webpack.config.js"
   }
 }
